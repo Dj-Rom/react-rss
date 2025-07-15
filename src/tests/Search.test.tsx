@@ -42,8 +42,7 @@ describe('Search component with LocalStorage integration', () => {
     test('loads saved search query from localStorage on mount', () => {
         localStorage.setItem('searchQuery', 'saved query');
 
-        // Modify Search to accept `value` prop from localStorage in your actual component
-        // For this test, simulate it by passing the saved query as prop
+
         render(<Search value={localStorage.getItem('searchQuery') || ''} onSearch={mockOnSearch} />);
         const input = screen.getByTestId('search-input') as HTMLInputElement;
 
