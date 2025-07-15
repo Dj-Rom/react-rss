@@ -46,16 +46,16 @@ class App extends Component<object, State> {
     );
   };
 
-  loadItems = (query: string) => {
+   loadItems = (query: string) => {
     this.setState({ loading: true, error: null });
 
     this.fetchItems(query)
-      .then((items) => {
-        this.setState({ items, loading: false });
-      })
-      .catch((err) => {
-        this.setState({ error: err.message, loading: false });
-      });
+        .then((items) => {
+          this.setState({ items, loading: false });
+        })
+        .catch((err) => {
+          this.setState({ error: err.message, loading: false });
+        });
   };
 
   handleSearch = (query: string) => {
@@ -63,11 +63,13 @@ class App extends Component<object, State> {
     this.setState({ query }, () => this.loadItems(query));
   };
 
-  triggerError = () => {
-    this.setState({ hasError: true });
-    throw new Error('Manual error triggered!');
-  };
+    triggerError = () => {
+        this.setState({ hasError: true })
+    };
   render() {
+      if (this.state.hasError) {
+          throw new Error('Manual error triggered!');
+      }
     const { hasError, query, items, loading, error } = this.state;
     if (hasError) {
       return (
