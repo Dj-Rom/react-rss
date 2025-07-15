@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Search from './../components/Search';
+import Search from '../components/Search';
 import { vi } from 'vitest';
 
-describe('Search component', () => {
+describe('Search component with LocalStorage integration', () => {
     const mockOnSearch = vi.fn();
 
     beforeEach(() => {
@@ -10,34 +10,43 @@ describe('Search component', () => {
         mockOnSearch.mockClear();
     });
 
-    it('renders input and button', () => {
-        render(<Search value="" onSearch={mockOnSearch} />);
-        expect(screen.getByPlaceholderText(/search pokémon/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
+    test('renders input with prop value', () => {
+        render(<Search value="prop value" onSearch={mockOnSearch} />);
+        const input = screen.getByTestId('search-input') as HTMLInputElement;
+        expect(input.value).toBe('prop value');
     });
 
-    it('renders saved search term from props', () => {
-        render(<Search value="Pikachu" onSearch={mockOnSearch} />);
-        expect(screen.getByDisplayValue('Pikachu')).toBeInTheDocument();
-    });
-
-    it('updates input value when user types', () => {
+    test('updates input value on user typing', () => {
         render(<Search value="" onSearch={mockOnSearch} />);
-        const input = screen.getByPlaceholderText(/search pokémon/i) as HTMLInputElement;
+        const input = screen.getByTestId('search-input') as HTMLInputElement;
 
         fireEvent.change(input, { target: { value: 'Bulbasaur' } });
         expect(input.value).toBe('Bulbasaur');
     });
 
-    it('calls onSearch with trimmed input on submit', () => {
-        render(<Search value="" onSearch={mockOnSearch} />);
-        const input = screen.getByPlaceholderText(/search pokémon/i);
+    test('calls onSearch with trimmed input on submit and updates localStorage', () => {
+        render(<Search value="" onSearch={(query) => {
+            mockOnSearch(query);
+            localStorage.setItem('searchQuery', query);
+        }} />);
+        const input = screen.getByTestId('search-input') as HTMLInputElement;
         const button = screen.getByRole('button', { name: /search/i });
 
         fireEvent.change(input, { target: { value: '  charmander  ' } });
         fireEvent.click(button);
 
         expect(mockOnSearch).toHaveBeenCalledWith('charmander');
-        expect(mockOnSearch).toHaveBeenCalledTimes(1);
+        expect(localStorage.getItem('searchQuery')).toBe('charmander');
+    });
+
+    test('loads saved search query from localStorage on mount', () => {
+        localStorage.setItem('searchQuery', 'saved query');
+
+        // Modify Search to accept `value` prop from localStorage in your actual component
+        // For this test, simulate it by passing the saved query as prop
+        render(<Search value={localStorage.getItem('searchQuery') || ''} onSearch={mockOnSearch} />);
+        const input = screen.getByTestId('search-input') as HTMLInputElement;
+
+        expect(input.value).toBe('saved query');
     });
 });

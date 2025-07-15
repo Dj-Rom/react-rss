@@ -27,10 +27,11 @@ class Search extends Component<Props, State> {
     return (
       <form onSubmit={this.handleSubmit}>
         <input
-          type="text"
-          value={this.state.input}
-          onChange={this.handleChange}
-          placeholder="Search Pokémon"
+            data-testid="search-input"
+            type="text"
+            value={this.state.input}
+            onChange={this.handleChange}
+            placeholder="Search Pokémon"
         />
         <button type="submit">Search</button>
       </form>
