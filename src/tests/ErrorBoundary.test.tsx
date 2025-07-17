@@ -1,52 +1,68 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest'; // <-- import vi here
 import ErrorBoundary from '../ErrorBoundary';
 
-function ProblemChild({ shouldThrow }: { shouldThrow: boolean }) {
-    if (shouldThrow) {
-        throw new Error('Test error');
-    }
-    return <div>All good</div>;
-}
+const consoleErrorMock = vi
+  .spyOn(console, 'error')
+  .mockImplementation(() => {});
 
-test('renders fallback UI and resets on "Try again" click', () => {
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+afterEach(() => {
+  consoleErrorMock.mockClear();
+});
 
-    try {
-        let errorBoundaryKey = 0;
+afterAll(() => {
+  consoleErrorMock.mockRestore();
+});
 
-        const { rerender } = render(
-            <ErrorBoundary key={errorBoundaryKey}>
-                <ProblemChild shouldThrow={false} />
-            </ErrorBoundary>
-        );
+const Bomb = () => {
+  throw new Error('Boom!');
+};
 
-        expect(screen.getByText(/All good/i)).toBeInTheDocument();
+const ErrorTriggerButton = () => {
+  const [throwError, setThrowError] = React.useState(false);
+  return throwError ? (
+    <Bomb />
+  ) : (
+    <button onClick={() => setThrowError(true)}>Trigger Error</button>
+  );
+};
 
+describe('ErrorBoundary', () => {
+  test('displays fallback UI when a child throws', () => {
+    render(
+      <ErrorBoundary>
+        <ErrorTriggerButton />
+      </ErrorBoundary>
+    );
 
-        rerender(
-            <ErrorBoundary key={errorBoundaryKey}>
-                <ProblemChild shouldThrow={true} />
-            </ErrorBoundary>
-        );
+    fireEvent.click(screen.getByText(/trigger error/i));
 
-        expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+    expect(consoleErrorMock).toHaveBeenCalled();
+  });
 
+  test('renders children when no error occurs', () => {
+    render(
+      <ErrorBoundary>
+        <p>Normal content</p>
+      </ErrorBoundary>
+    );
 
-        fireEvent.click(screen.getByText(/Try again/i));
+    expect(screen.getByText(/normal content/i)).toBeInTheDocument();
+  });
 
+  test('resets error state when "Try again" is clicked', () => {
+    render(
+      <ErrorBoundary>
+        <ErrorTriggerButton />
+      </ErrorBoundary>
+    );
 
-        errorBoundaryKey++;
+    fireEvent.click(screen.getByText(/trigger error/i));
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
 
-        rerender(
-            <ErrorBoundary key={errorBoundaryKey}>
-                <ProblemChild shouldThrow={false} />
-            </ErrorBoundary>
-        );
-
-        expect(screen.queryByText(/Something went wrong/i)).not.toBeInTheDocument();
-        expect(screen.getByText(/All good/i)).toBeInTheDocument();
-    } finally {
-        consoleError.mockRestore();
-    }
+    fireEvent.click(screen.getByText(/try again/i));
+    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/trigger error/i)).toBeInTheDocument(); // Child re-rendered
+  });
 });

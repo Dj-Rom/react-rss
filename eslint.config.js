@@ -1,3 +1,4 @@
+// .eslintrc.ts
 import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -8,7 +9,7 @@ import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import reactCompiler from 'eslint-plugin-react-compiler';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'coverage/**'] }, // <-- use ignores here for files/folders to ignore
   {
     extends: [
       js.configs.recommended,

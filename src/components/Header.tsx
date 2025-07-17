@@ -1,7 +1,8 @@
 // components/Header.tsx
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Search from './Search.tsx';
 import styles from '../css/header.module.css';
+
 type Props = {
   value: string;
   onSearch: (query: string) => void;
@@ -16,15 +17,6 @@ class Header extends Component<Props, State> {
     input: this.props.value,
   };
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ input: e.target.value });
-  };
-
-  handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    this.props.onSearch(this.state.input);
-  };
-
   render() {
     return (
       <header className={styles.header}>
@@ -33,4 +25,5 @@ class Header extends Component<Props, State> {
     );
   }
 }
+
 export default Header;

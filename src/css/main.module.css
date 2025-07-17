@@ -8,6 +8,7 @@
   top: -10px;
   height: 91vh;
 }
+
 .cardList {
   padding: 1rem;
   max-height: 90%;
@@ -21,6 +22,7 @@
   flex-wrap: wrap;
   align-items: center;
 }
+
 .card {
   width: 20%;
   background: #8fbc8f;
@@ -28,12 +30,14 @@
   height: max-content;
   min-height: 139px;
   max-height: max-content;
-  padding: .2rem 1rem;
+  padding: 0.2rem 1rem;
   border-radius: 5px;
+
   h3::first-letter {
     font-weight: bold;
   }
 }
+
 .card:hover {
   background: green;
 }
@@ -45,6 +49,7 @@ button[id='errorButton'] {
   right: 27px;
   background-color: red;
 }
+
 h2 {
   margin: 0 auto;
   color: red;

@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import Card from './Card.tsx';
 import styles from '../css/main.module.css';
+
 type Props = {
   items: Array<{ name: string; description: string }>;
 };

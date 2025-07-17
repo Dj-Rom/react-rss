@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import styles from '../css/main.module.css';
+
 type Props = {
   name: string;
   description: string;
