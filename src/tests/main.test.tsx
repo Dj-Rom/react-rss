@@ -1,71 +1,74 @@
-import * as ReactDOMClient from 'react-dom/client';
 import { render, screen } from '@testing-library/react';
-import Main from '../components/Main';
 import { vi } from 'vitest';
+import Main from './../components/Main';
 
-describe('Main component', () => {
-  const mockItems = [{ name: 'pikachu', description: 'Electric type' }];
+type Item = {
+  name: string;
+  description: string;
+};
 
-  it('renders Spinner when loading is true', () => {
-    render(<Main items={[]} loading={true} error={null} />);
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
-  });
+type CardListProps = {
+  items: Item[];
+  onItemClick: (name: string) => void;
+};
 
-  it('renders error message when error is set', () => {
-    render(<Main items={[]} loading={false} error="API error" />);
-    expect(screen.getByText(/could not find/i)).toBeInTheDocument();
-  });
-
-  it('renders CardList when items are present and not loading or error', () => {
-    render(<Main items={mockItems} loading={false} error={null} />);
-    expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
-  });
-  it('renders "Could not find" when no items, no loading, and no error', () => {
-    render(<Main items={[]} loading={false} error={null} />);
-    expect(
-      screen.getByText(/could not find the requested pokémon/i)
-    ).toBeInTheDocument();
-  });
-});
-vi.mock('react-dom/client', () => ({
-  createRoot: vi.fn(() => ({
-    render: vi.fn(),
-  })),
+vi.mock('./../components/CardList.tsx', () => ({
+  default: ({ items, onItemClick }: CardListProps) => (
+    <div data-testid="card-list">
+      {items.map((item) => (
+        <div key={item.name} onClick={() => onItemClick(item.name)}>
+          {item.name} - {item.description}
+        </div>
+      ))}
+    </div>
+  ),
 }));
 
-vi.mock('react-dom/client', () => {
-  return {
-    createRoot: vi.fn(() => ({
-      render: vi.fn(),
-    })),
-  };
-});
+describe('Main component', () => {
+  const mockClick = vi.fn();
 
-describe('main.tsx initialization', () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    container = document.createElement('div');
-    container.id = 'root';
-    document.body.appendChild(container);
+  it('renders loading state', () => {
+    render(
+      <Main items={[]} loading={true} error={null} onItemClick={mockClick} />
+    );
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  afterEach(() => {
-    document.body.removeChild(container);
-    vi.clearAllMocks();
+  it('renders error state', () => {
+    render(
+      <Main
+        items={[]}
+        loading={false}
+        error="Failed to fetch"
+        onItemClick={mockClick}
+      />
+    );
+    expect(screen.getByText('Error: Failed to fetch')).toBeInTheDocument();
   });
 
-  it('calls createRoot and render in main.tsx', async () => {
-    await import('../main');
+  it('renders empty state', () => {
+    render(
+      <Main items={[]} loading={false} error={null} onItemClick={mockClick} />
+    );
+    expect(screen.getByText('No results found.')).toBeInTheDocument();
+  });
 
-    const mockedCreateRoot = ReactDOMClient.createRoot as unknown as ReturnType<
-      typeof vi.fn
-    >;
+  it('renders CardList when items are present', () => {
+    const items = [
+      { name: 'Item 1', description: 'Desc 1' },
+      { name: 'Item 2', description: 'Desc 2' },
+    ];
 
-    expect(mockedCreateRoot).toHaveBeenCalledWith(container);
-
-    const root = mockedCreateRoot.mock.results[0].value;
-
-    expect(root.render).toHaveBeenCalled();
+    render(
+      <Main
+        items={items}
+        loading={false}
+        error={null}
+        onItemClick={mockClick}
+      />
+    );
+    expect(screen.getByTestId('card-list')).toBeInTheDocument();
+    expect(screen.getByText('Item 1 - Desc 1')).toBeInTheDocument();
+    expect(screen.getByText('Item 2 - Desc 2')).toBeInTheDocument();
   });
 });

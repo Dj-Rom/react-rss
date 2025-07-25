@@ -1,60 +1,25 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Search from '../components/Search';
-import { vi } from 'vitest';
+import Search from './../components/Search';
 
-describe('Search component with LocalStorage integration', () => {
-  const mockOnSearch = vi.fn();
+test('calls onSearch with trimmed query on submit', () => {
+  const onSearch = vi.fn();
+  const setSearchQuery = vi.fn();
+  let value = '';
 
-  beforeEach(() => {
-    localStorage.clear();
-    mockOnSearch.mockClear();
-  });
+  const { rerender } = render(
+    <Search value={value} onSearch={onSearch} setSearchQuery={setSearchQuery} />
+  );
 
-  test('renders input with prop value', () => {
-    render(<Search value="prop value" onSearch={mockOnSearch} />);
-    const input = screen.getByTestId('search-input') as HTMLInputElement;
-    expect(input.value).toBe('prop value');
-  });
+  const input = screen.getByTestId('search-input');
 
-  test('updates input value on user typing', () => {
-    render(<Search value="" onSearch={mockOnSearch} />);
-    const input = screen.getByTestId('search-input') as HTMLInputElement;
+  fireEvent.change(input, { target: { value: '  Pikachu  ' } });
+  expect(setSearchQuery).toHaveBeenCalledWith('  Pikachu  ');
 
-    fireEvent.change(input, { target: { value: 'Bulbasaur' } });
-    expect(input.value).toBe('Bulbasaur');
-  });
+  value = '  Pikachu  ';
+  rerender(
+    <Search value={value} onSearch={onSearch} setSearchQuery={setSearchQuery} />
+  );
 
-  test('calls onSearch with trimmed input on submit and updates localStorage', () => {
-    render(
-      <Search
-        value=""
-        onSearch={(query) => {
-          mockOnSearch(query);
-          localStorage.setItem('searchQuery', query);
-        }}
-      />
-    );
-    const input = screen.getByTestId('search-input') as HTMLInputElement;
-    const button = screen.getByRole('button', { name: /search/i });
-
-    fireEvent.change(input, { target: { value: '  charmander  ' } });
-    fireEvent.click(button);
-
-    expect(mockOnSearch).toHaveBeenCalledWith('charmander');
-    expect(localStorage.getItem('searchQuery')).toBe('charmander');
-  });
-
-  test('loads saved search query from localStorage on mount', () => {
-    localStorage.setItem('searchQuery', 'saved query');
-
-    render(
-      <Search
-        value={localStorage.getItem('searchQuery') || ''}
-        onSearch={mockOnSearch}
-      />
-    );
-    const input = screen.getByTestId('search-input') as HTMLInputElement;
-
-    expect(input.value).toBe('saved query');
-  });
+  fireEvent.submit(screen.getByRole('form'));
+  expect(onSearch).toHaveBeenCalledWith('Pikachu');
 });

@@ -1,11 +1,44 @@
-import { render, screen } from '@testing-library/react';
-import Card from '../components/Card';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
+import Card from './../components/Card';
+
+vi.mock('../css/main.module.css', () => ({
+  default: {
+    card: 'card_mock',
+  },
+}));
 
 describe('Card component', () => {
-  it('renders the name and description', () => {
-    render(<Card name="Pikachu" description="An electric Pokémon" />);
+  const mockClick = vi.fn();
 
-    expect(screen.getByText('Pikachu')).toBeInTheDocument();
-    expect(screen.getByText('An electric Pokémon')).toBeInTheDocument();
+  const defaultProps = {
+    name: 'Test Item',
+    description: 'This is a test description',
+    onItemClick: mockClick,
+  };
+
+  beforeEach(() => {
+    mockClick.mockClear();
+  });
+
+  it('renders the name and description', () => {
+    render(<Card {...defaultProps} />);
+
+    expect(screen.getByText('Test Item')).toBeInTheDocument();
+    expect(screen.getByText('This is a test description')).toBeInTheDocument();
+  });
+
+  it('calls onItemClick with the correct name when clicked', () => {
+    render(<Card {...defaultProps} />);
+
+    fireEvent.click(screen.getByText('Test Item'));
+    expect(mockClick).toHaveBeenCalledOnce();
+    expect(mockClick).toHaveBeenCalledWith('Test Item');
+  });
+
+  it('has the correct CSS class', () => {
+    render(<Card {...defaultProps} />);
+    const card = screen.getByText('Test Item').closest('div');
+    expect(card).toHaveClass('card_mock');
   });
 });

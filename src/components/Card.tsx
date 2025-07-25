@@ -1,20 +1,18 @@
-import { Component } from 'react';
 import styles from '../css/main.module.css';
 
 type Props = {
   name: string;
   description: string;
+  onItemClick: (name: string) => void;
 };
 
-class Card extends Component<Props> {
-  render() {
-    return (
-      <div className={styles.card}>
-        <h3>{this.props.name}</h3>
-        <p>{this.props.description}</p>
-      </div>
-    );
-  }
-}
+const Card = ({ name, description, onItemClick }: Props) => {
+  return (
+    <div className={styles.card} onClick={() => onItemClick(name)}>
+      <h3>{name}</h3>
+      <p>{description}</p>
+    </div>
+  );
+};
 
 export default Card;

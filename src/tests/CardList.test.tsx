@@ -1,35 +1,57 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import CardList from '../components/CardList';
+import CardList from './../components/CardList';
 
-type CardProps = { name: string; description: string };
+vi.mock('./../css/main.module.css', () => ({
+  default: {
+    cardList: 'cardList_mock',
+  },
+}));
 
-vi.mock('../components/Card', () => ({
-  default: (props: CardProps) => (
-    <div data-testid="card">
-      <h2>{props.name}</h2>
-      <p>{props.description}</p>
+interface CardProps {
+  name: string;
+  description: string;
+  onItemClick: (name: string) => void;
+}
+
+vi.mock('./Card', () => ({
+  default: ({ name, description, onItemClick }: CardProps) => (
+    <div onClick={() => onItemClick(name)}>
+      <h3>{name}</h3>
+      <p>{description}</p>
     </div>
   ),
 }));
 
-describe('CardList component', () => {
+describe('CardList', () => {
   const items = [
-    { name: 'Card 1', description: 'Description 1' },
-    { name: 'Card 2', description: 'Description 2' },
+    { name: 'Item 1', description: 'Description 1' },
+    { name: 'Item 2', description: 'Description 2' },
   ];
+  const mockClick = vi.fn();
 
-  it('renders correct number of Card components', () => {
-    render(<CardList items={items} />);
-    const cards = screen.getAllByTestId('card');
-    expect(cards.length).toBe(items.length);
+  beforeEach(() => {
+    mockClick.mockClear();
   });
 
-  it('renders Card components with correct props', () => {
-    render(<CardList items={items} />);
-    items.forEach(({ name, description }) => {
-      expect(screen.getByText(name)).toBeDefined();
-      expect(screen.getByText(description)).toBeDefined();
-    });
+  it('renders container with correct class and test ID', () => {
+    const { container } = render(
+      <CardList items={items} onItemClick={mockClick} />
+    );
+    const cardContainer = screen.getByTestId('card');
+    expect(cardContainer).toHaveClass('cardList_mock');
+    expect(container.firstChild).toBe(cardContainer);
+  });
+
+  it('renders all items as cards', () => {
+    render(<CardList items={items} onItemClick={mockClick} />);
+    expect(screen.getByText('Item 1')).toBeInTheDocument();
+    expect(screen.getByText('Item 2')).toBeInTheDocument();
+  });
+
+  it('calls onItemClick with correct name when a card is clicked', () => {
+    render(<CardList items={items} onItemClick={mockClick} />);
+    fireEvent.click(screen.getByText('Item 2'));
+    expect(mockClick).toHaveBeenCalledWith('Item 2');
   });
 });
