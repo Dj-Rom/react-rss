@@ -1,63 +1,54 @@
+/// <reference types="vitest" />
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
-import Header from './../components/Header';
+import Header from '../components/Header'; // adjust path as needed
+import { BrowserRouter } from 'react-router-dom';
 
-vi.mock('../css/header.module.css', () => ({
-  default: {
-    header: 'header_mock',
-  },
-}));
-
-type SearchProps = {
-  value: string;
-  setSearchQuery: (query: string) => void;
-  onSearch: (term: string) => void;
-};
-
-vi.mock('./../components/Search.tsx', () => ({
-  default: ({ value, setSearchQuery, onSearch }: SearchProps) => (
-    <div>
-      <p>Search value: {value}</p>
-      <button onClick={() => setSearchQuery('mocked')}>Set Query</button>
-      <button onClick={() => onSearch('go')}>Search</button>
-    </div>
+vi.mock('../components/Search.tsx', () => ({
+  default: ({ value, setSearchQuery, onSearch }: any) => (
+      <div data-testid="search-component">
+        <p>Search: {value}</p>
+        <button onClick={() => setSearchQuery('new query')}>Set Query</button>
+        <button onClick={() => onSearch('search now')}>Search</button>
+      </div>
   ),
 }));
 
 describe('Header component', () => {
-  const mockSetQuery = vi.fn();
-  const mockSearch = vi.fn();
+  it('renders About link and Search component', () => {
+    const setSearchQuery = vi.fn();
+    const onSearch = vi.fn();
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('renders Search with correct props and uses CSS class', () => {
     render(
-      <Header
-        value="Pikachu"
-        onSearch={mockSearch}
-        setSearchQuery={mockSetQuery}
-      />
+        <BrowserRouter>
+          <Header value="test" setSearchQuery={setSearchQuery} onSearch={onSearch} />
+        </BrowserRouter>
     );
 
-    expect(screen.getByText('Search value: Pikachu')).toBeInTheDocument();
-    expect(document.querySelector('header')).toHaveClass('header_mock');
+    // Check About link
+    const aboutLink = screen.getByRole('link', { name: /about/i });
+    expect(aboutLink).toBeInTheDocument();
+    expect(aboutLink).toHaveAttribute('href', '/about');
+
+    // Check mocked Search component
+    expect(screen.getByTestId('search-component')).toBeInTheDocument();
+    expect(screen.getByText(/Search: test/i)).toBeInTheDocument();
   });
 
-  it('calls setSearchQuery and onSearch when buttons are clicked', () => {
+  it('calls callbacks passed to Search', () => {
+    const setSearchQuery = vi.fn();
+    const onSearch = vi.fn();
+
     render(
-      <Header
-        value="Charmander"
-        onSearch={mockSearch}
-        setSearchQuery={mockSetQuery}
-      />
+        <BrowserRouter>
+          <Header value="test" setSearchQuery={setSearchQuery} onSearch={onSearch} />
+        </BrowserRouter>
     );
 
     screen.getByText('Set Query').click();
-    expect(mockSetQuery).toHaveBeenCalledWith('mocked');
-
     screen.getByText('Search').click();
-    expect(mockSearch).toHaveBeenCalledWith('go');
+
+    expect(setSearchQuery).toHaveBeenCalledWith('new query');
+    expect(onSearch).toHaveBeenCalledWith('search now');
   });
 });

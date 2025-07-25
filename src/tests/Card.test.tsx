@@ -32,7 +32,8 @@ describe('Card component', () => {
     render(<Card {...defaultProps} />);
 
     fireEvent.click(screen.getByText('Test Item'));
-    expect(mockClick).toHaveBeenCalledOnce();
+    expect(mockClick).toHaveBeenCalledTimes(1);
+
     expect(mockClick).toHaveBeenCalledWith('Test Item');
   });
 

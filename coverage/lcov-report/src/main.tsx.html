@@ -23,9 +23,9 @@
         </h1>
         <div class="clearfix">
           <div class="fl pad1y space-right2">
-            <span class="strong">100% </span>
+            <span class="strong">0% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">3/3</span>
+            <span class="fraction">0/3</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -41,9 +41,9 @@
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">100% </span>
+            <span class="strong">0% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">3/3</span>
+            <span class="fraction">0/3</span>
           </div>
         </div>
         <p class="quiet">
@@ -57,7 +57,7 @@
           </div>
         </template>
       </div>
-      <div class="status-line high"></div>
+      <div class="status-line low"></div>
       <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -83,10 +83,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -100,10 +100,10 @@ import ErrorBoundary from './ErrorBoundary.tsx';
 import './index.css';
 import App from './App.tsx';
 &nbsp;
-const container = document.getElementById('root') as HTMLElement;
-const root = createRoot(container);
+const container = <span class="cstat-no" title="statement not covered" >document.getElementById('root') as HTMLElement;</span>
+const root = <span class="cstat-no" title="statement not covered" >createRoot(container);</span>
 &nbsp;
-root.render(
+<span class="cstat-no" title="statement not covered" >root.render(</span>
   &lt;StrictMode&gt;
     &lt;ErrorBoundary&gt;
       &lt;App /&gt;
@@ -124,7 +124,7 @@ root.render(
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-07-25T10:12:53.286Z
+      at 2025-07-25T15:10:03.238Z
     </div>
     <script src="../prettify.js"></script>
     <script>

@@ -2,8 +2,10 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2023",
+    "jsx": "react-jsx",
     "lib": ["ES2023"],
     "module": "ESNext",
+
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -20,9 +22,9 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "types": ["vitest/globals", "jsdom"]
 
     /* Vitest types for vi(), describe(), it(), expect() */
-    "types": ["vitest"]
   },
   "include": [
     "vite.config.ts",
