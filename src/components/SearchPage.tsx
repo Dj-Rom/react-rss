@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import useFetchItems from '../hooks/useFetchItems';
-import useLocalStorage from '../hooks/useLocalStorage';
 import Header from './Header';
 import Main from './Main';
 import { Details } from './Details.tsx';
@@ -14,11 +13,12 @@ const ITEMS_PER_PAGE = 10;
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const query = searchParams.get('query') ?? '';
+  const queryParam = searchParams.get('query') ?? '';
   const page = parseInt(searchParams.get('page') ?? '1', 10);
   const details = searchParams.get('details');
 
-  const [searchQuery, setSearchQuery] = useLocalStorage('searchQuery', query);
+  const [searchQuery, setSearchQuery] = React.useState(queryParam);
+
   const { items, loading, error } = useFetchItems(searchQuery);
 
   useEffect(() => {
@@ -27,14 +27,21 @@ function SearchPage() {
     }
   }, [searchParams, setSearchParams]);
 
+  useEffect(() => {
+    const maxPage = Math.ceil(items.length / ITEMS_PER_PAGE) || 1;
+    if (page > maxPage) {
+      setSearchParams({ query: searchParams.get('query') ?? '', page: '1' });
+    }
+  }, [items, page, searchParams, setSearchParams]);
+
   const handleSearch = (newQuery: string) => {
     setSearchQuery(newQuery);
-    setSearchParams({ query: newQuery, page: '1' });
+    setSearchParams({ query: newQuery, page: '1' }); // сбрасываем страницу
   };
 
   const handlePageChange = (newPage: number) => {
     setSearchParams({
-      query: searchQuery,
+      query: searchParams.get('query') ?? '',
       page: newPage.toString(),
       ...(details ? { details } : {}),
     });
@@ -42,7 +49,7 @@ function SearchPage() {
 
   const handleSelectDetail = (name: string) => {
     setSearchParams({
-      query: searchQuery,
+      query: searchParams.get('query') ?? '',
       page: page.toString(),
       details: name,
     });
@@ -56,11 +63,7 @@ function SearchPage() {
   return (
     <div style={{ display: 'flex' }} data-testid="search-page">
       <div style={{ flex: 1 }}>
-        <Header
-          value={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onSearch={handleSearch}
-        />
+        <Header initialValue={queryParam} onSearch={handleSearch} />
 
         {loading && <Spinner />}
         {error && <p>Error: {error}</p>}

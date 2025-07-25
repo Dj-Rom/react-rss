@@ -1,1 +1,19 @@
-import{j as e}from"./index-DZ-8c4qZ.js";const s=()=>e.jsxs("section",{"data-testid":"about-page",children:[e.jsx("h1",{children:"Hi, my name is Aleh"}),e.jsx("span",{children:"I`‘m originally from Belarus, but now live in Poland"}),e.jsx("br",{}),e.jsx("a",{href:"https://rs.school/courses/reactjs",target:"_blank",rel:"noreferrer",children:"RS School React Course"})]});export{s as default};
+import { j as e } from './index-DZ-8c4qZ.js';
+const s = () =>
+  e.jsxs('section', {
+    'data-testid': 'about-page',
+    children: [
+      e.jsx('h1', { children: 'Hi, my name is Aleh' }),
+      e.jsx('span', {
+        children: 'I`‘m originally from Belarus, but now live in Poland',
+      }),
+      e.jsx('br', {}),
+      e.jsx('a', {
+        href: 'https://rs.school/courses/reactjs',
+        target: '_blank',
+        rel: 'noreferrer',
+        children: 'RS School React Course',
+      }),
+    ],
+  });
+export { s as default };

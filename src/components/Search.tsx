@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import styles from '../css/search.module.css';
 
 type Props = {
   value: string;
@@ -6,30 +7,28 @@ type Props = {
   setSearchQuery: (query: string) => void;
 };
 
-const Search = ({ value, onSearch, setSearchQuery }: Props) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+const Search = ({ value, setSearchQuery, onSearch }: Props) => {
+  const [inputValue, setInputValue] = useState(value);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchQuery(e.target.value);
-  }
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (inputRef.current) {
-      onSearch(inputRef.current.value.trim());
-    }
-  }
+    const trimmed = inputValue.trim();
+    setSearchQuery(trimmed);
+    onSearch(trimmed);
+  };
 
   return (
-    <form onSubmit={handleSubmit} role="form">
+    <form onSubmit={handleSubmit} className={styles.searchForm}>
       <input
-        ref={inputRef}
-        name="search"
-        data-testid="search-input"
         type="text"
-        value={value}
+        value={inputValue}
         onChange={handleChange}
-        placeholder="Search Pokémon"
+        placeholder="Search..."
+        aria-label="Search input"
       />
       <button type="submit">Search</button>
     </form>

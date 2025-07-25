@@ -1,54 +1,51 @@
-/// <reference types="vitest" />
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import Header from '../components/Header'; // adjust path as needed
+import Header from '../components/Header';
 import { BrowserRouter } from 'react-router-dom';
 
-vi.mock('../components/Search.tsx', () => ({
-  default: ({ value, setSearchQuery, onSearch }: any) => (
-      <div data-testid="search-component">
-        <p>Search: {value}</p>
-        <button onClick={() => setSearchQuery('new query')}>Set Query</button>
-        <button onClick={() => onSearch('search now')}>Search</button>
-      </div>
-  ),
-}));
+const renderWithRouter = (ui: React.ReactElement) =>
+  render(<BrowserRouter>{ui}</BrowserRouter>);
 
-describe('Header component', () => {
-  it('renders About link and Search component', () => {
-    const setSearchQuery = vi.fn();
-    const onSearch = vi.fn();
-
-    render(
-        <BrowserRouter>
-          <Header value="test" setSearchQuery={setSearchQuery} onSearch={onSearch} />
-        </BrowserRouter>
+describe('Header', () => {
+  it('renders About link and input with initial value', () => {
+    renderWithRouter(<Header initialValue="init" onSearch={vi.fn()} />);
+    expect(screen.getByText(/about/i)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /search input/i })).toHaveValue(
+      'init'
     );
-
-    // Check About link
-    const aboutLink = screen.getByRole('link', { name: /about/i });
-    expect(aboutLink).toBeInTheDocument();
-    expect(aboutLink).toHaveAttribute('href', '/about');
-
-    // Check mocked Search component
-    expect(screen.getByTestId('search-component')).toBeInTheDocument();
-    expect(screen.getByText(/Search: test/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
   });
 
-  it('calls callbacks passed to Search', () => {
-    const setSearchQuery = vi.fn();
-    const onSearch = vi.fn();
+  it('updates input value on user typing', () => {
+    renderWithRouter(<Header initialValue="" onSearch={vi.fn()} />);
+    const input = screen.getByRole('textbox', { name: /search input/i });
+    fireEvent.change(input, { target: { value: 'hello' } });
+    expect(input).toHaveValue('hello');
+  });
 
-    render(
-        <BrowserRouter>
-          <Header value="test" setSearchQuery={setSearchQuery} onSearch={onSearch} />
-        </BrowserRouter>
-    );
+  it('calls onSearch with trimmed input on submit', () => {
+    const onSearchMock = vi.fn();
+    renderWithRouter(<Header initialValue="" onSearch={onSearchMock} />);
+    const input = screen.getByRole('textbox', { name: /search input/i });
+    const form = screen.getByRole('form');
 
-    screen.getByText('Set Query').click();
-    screen.getByText('Search').click();
+    fireEvent.change(input, { target: { value: '  test  ' } });
+    fireEvent.submit(form);
 
-    expect(setSearchQuery).toHaveBeenCalledWith('new query');
-    expect(onSearch).toHaveBeenCalledWith('search now');
+    expect(onSearchMock).toHaveBeenCalledTimes(1);
+    expect(onSearchMock).toHaveBeenCalledWith('test');
+  });
+
+  it('calls onSearch even with empty trimmed input', () => {
+    const onSearchMock = vi.fn();
+    renderWithRouter(<Header initialValue="" onSearch={onSearchMock} />);
+    const input = screen.getByRole('textbox', { name: /search input/i });
+    const form = screen.getByRole('form');
+
+    fireEvent.change(input, { target: { value: '     ' } });
+    fireEvent.submit(form);
+
+    expect(onSearchMock).toHaveBeenCalledWith('');
   });
 });

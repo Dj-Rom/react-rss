@@ -1,1 +1,246 @@
-import{r as d,j as t,L as b,S as j,u as _}from"./index-DZ-8c4qZ.js";function w(e){const[s,a]=d.useState([]),[i,r]=d.useState(!1),[o,c]=d.useState(null);return d.useEffect(()=>{async function u(){r(!0),c(null);try{const n=await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");if(!n.ok)throw new Error("Failed to fetch items");const h=(await n.json()).results.filter(f=>f.name.toLowerCase().includes(e.toLowerCase())).map(f=>({name:f.name,description:`More info at ${f.url}`}));a(h)}catch(n){n instanceof Error?c(n.message):c("Unknown error"),a([])}finally{r(!1)}}u()},[e]),{items:s,loading:i,error:o}}function k(e,s){const[a,i]=d.useState(()=>{try{return window.localStorage.getItem(e)??s}catch{return s}});return[a,o=>{try{i(o),window.localStorage.setItem(e,o)}catch{console.log("Could not get stored value")}}]}const v=({value:e,onSearch:s,setSearchQuery:a})=>{const i=d.useRef(null);function r(c){a(c.target.value)}function o(c){c.preventDefault(),i.current&&s(i.current.value.trim())}return t.jsxs("form",{onSubmit:o,role:"form",children:[t.jsx("input",{ref:i,name:"search","data-testid":"search-input",type:"text",value:e,onChange:r,placeholder:"Search Pokémon"}),t.jsx("button",{type:"submit",children:"Search"})]})},E="_about_link_me8qz_1",P="_header_me8qz_9",x={about_link:E,header:P},L=e=>t.jsxs("header",{className:x.header,children:[t.jsx(b,{to:"/about",className:x.about_link,children:"About"}),t.jsx(v,{value:e.value,setSearchQuery:e.setSearchQuery,onSearch:e.onSearch})]}),C="_cardList_1dcw7_12",I="_card_1dcw7_12",S={cardList:C,card:I},q=({name:e,description:s,onItemClick:a})=>t.jsxs("div",{className:S.card,onClick:()=>a(e),children:[t.jsx("h3",{children:e}),t.jsx("p",{children:s})]}),N=({items:e,onItemClick:s})=>t.jsx("div",{className:S.cardList,"data-testid":"card",children:e.map(a=>t.jsx(q,{name:a.name,description:a.description,onItemClick:s},a.name))}),M=({items:e,loading:s,error:a,onItemClick:i})=>s?t.jsx("p",{children:"Loading..."}):a?t.jsxs("p",{children:["Error: ",a]}):e.length?t.jsx(N,{items:e,onItemClick:i}):t.jsx("p",{children:"No results found."});function D({name:e}){const[s,a]=d.useState(null),[i,r]=d.useState(!1);return d.useEffect(()=>{async function o(){r(!0);try{const c=await fetch(`https://pokeapi.co/api/v2/pokemon/${e}`);if(!c.ok)throw new Error("Failed to load details");const u=await c.json();a(u)}catch{a(null)}finally{r(!1)}}o()},[e]),i?t.jsx(j,{}):s?t.jsxs("div",{children:[t.jsx("h3",{children:s.name}),t.jsxs("p",{children:["Height: ",s.height]}),t.jsxs("p",{children:["Base XP: ",s.base_experience]}),t.jsxs("p",{children:["Abilities: ",s.abilities.map(o=>o.ability.name).join(", ")]})]}):t.jsx("p",{children:"No details found."})}function Q({currentPage:e,totalItems:s,itemsPerPage:a,onPageChange:i}){const r=Math.ceil(s/a);if(r<=1)return null;const o=5,u=(()=>{const n=[];if(r<=o+4)for(let l=1;l<=r;l++)n.push(l);else{n.push(1),e>3&&n.push("...");const l=Math.max(2,e-1),m=Math.min(r-1,e+1);for(let h=l;h<=m;h++)n.push(h);e<r-2&&n.push("..."),n.push(r)}return n})();return t.jsx("div",{"data-testid":"pagination",children:u.map((n,l)=>typeof n=="number"?t.jsx("button",{disabled:n===e,onClick:()=>i(n),style:{margin:2},children:n},l):t.jsx("span",{style:{margin:"0 4px"},children:n},l))})}const g=10;function V(){const[e,s]=_(),a=e.get("query")??"",i=parseInt(e.get("page")??"1",10),r=e.get("details"),[o,c]=k("searchQuery",a),{items:u,loading:n,error:l}=w(o);d.useEffect(()=>{(!e.has("query")||!e.has("page"))&&s({query:"",page:"1"})},[e,s]);const m=p=>{c(p),s({query:p,page:"1"})},h=p=>{s({query:o,page:p.toString(),...r?{details:r}:{}})},f=p=>{s({query:o,page:i.toString(),details:p})},y=u.slice((i-1)*g,i*g);return t.jsxs("div",{style:{display:"flex"},"data-testid":"search-page",children:[t.jsxs("div",{style:{flex:1},children:[t.jsx(L,{value:o,setSearchQuery:c,onSearch:m}),n&&t.jsx(j,{}),l&&t.jsxs("p",{children:["Error: ",l]}),t.jsx(M,{items:y,loading:n,error:l,onItemClick:f}),t.jsx(Q,{currentPage:i,totalItems:u.length,itemsPerPage:g,onPageChange:h})]}),t.jsx("div",{style:{flex:1,padding:"0 20px"},children:r?t.jsx(D,{name:r}):t.jsx("p",{children:"Select an item to see details"})})]})}export{V as default};
+import { r as d, j as t, L as b, S as j, u as _ } from './index-DZ-8c4qZ.js';
+function w(e) {
+  const [s, a] = d.useState([]),
+    [i, r] = d.useState(!1),
+    [o, c] = d.useState(null);
+  return (
+    d.useEffect(() => {
+      async function u() {
+        (r(!0), c(null));
+        try {
+          const n = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000');
+          if (!n.ok) throw new Error('Failed to fetch items');
+          const h = (await n.json()).results
+            .filter((f) => f.name.toLowerCase().includes(e.toLowerCase()))
+            .map((f) => ({
+              name: f.name,
+              description: `More info at ${f.url}`,
+            }));
+          a(h);
+        } catch (n) {
+          (n instanceof Error ? c(n.message) : c('Unknown error'), a([]));
+        } finally {
+          r(!1);
+        }
+      }
+      u();
+    }, [e]),
+    { items: s, loading: i, error: o }
+  );
+}
+function k(e, s) {
+  const [a, i] = d.useState(() => {
+    try {
+      return window.localStorage.getItem(e) ?? s;
+    } catch {
+      return s;
+    }
+  });
+  return [
+    a,
+    (o) => {
+      try {
+        (i(o), window.localStorage.setItem(e, o));
+      } catch {
+        console.log('Could not get stored value');
+      }
+    },
+  ];
+}
+const v = ({ value: e, onSearch: s, setSearchQuery: a }) => {
+    const i = d.useRef(null);
+    function r(c) {
+      a(c.target.value);
+    }
+    function o(c) {
+      (c.preventDefault(), i.current && s(i.current.value.trim()));
+    }
+    return t.jsxs('form', {
+      onSubmit: o,
+      role: 'form',
+      children: [
+        t.jsx('input', {
+          ref: i,
+          name: 'search',
+          'data-testid': 'search-input',
+          type: 'text',
+          value: e,
+          onChange: r,
+          placeholder: 'Search Pokémon',
+        }),
+        t.jsx('button', { type: 'submit', children: 'Search' }),
+      ],
+    });
+  },
+  E = '_about_link_me8qz_1',
+  P = '_header_me8qz_9',
+  x = { about_link: E, header: P },
+  L = (e) =>
+    t.jsxs('header', {
+      className: x.header,
+      children: [
+        t.jsx(b, { to: '/about', className: x.about_link, children: 'About' }),
+        t.jsx(v, {
+          value: e.value,
+          setSearchQuery: e.setSearchQuery,
+          onSearch: e.onSearch,
+        }),
+      ],
+    }),
+  C = '_cardList_1dcw7_12',
+  I = '_card_1dcw7_12',
+  S = { cardList: C, card: I },
+  q = ({ name: e, description: s, onItemClick: a }) =>
+    t.jsxs('div', {
+      className: S.card,
+      onClick: () => a(e),
+      children: [t.jsx('h3', { children: e }), t.jsx('p', { children: s })],
+    }),
+  N = ({ items: e, onItemClick: s }) =>
+    t.jsx('div', {
+      className: S.cardList,
+      'data-testid': 'card',
+      children: e.map((a) =>
+        t.jsx(
+          q,
+          { name: a.name, description: a.description, onItemClick: s },
+          a.name
+        )
+      ),
+    }),
+  M = ({ items: e, loading: s, error: a, onItemClick: i }) =>
+    s
+      ? t.jsx('p', { children: 'Loading...' })
+      : a
+        ? t.jsxs('p', { children: ['Error: ', a] })
+        : e.length
+          ? t.jsx(N, { items: e, onItemClick: i })
+          : t.jsx('p', { children: 'No results found.' });
+function D({ name: e }) {
+  const [s, a] = d.useState(null),
+    [i, r] = d.useState(!1);
+  return (
+    d.useEffect(() => {
+      async function o() {
+        r(!0);
+        try {
+          const c = await fetch(`https://pokeapi.co/api/v2/pokemon/${e}`);
+          if (!c.ok) throw new Error('Failed to load details');
+          const u = await c.json();
+          a(u);
+        } catch {
+          a(null);
+        } finally {
+          r(!1);
+        }
+      }
+      o();
+    }, [e]),
+    i
+      ? t.jsx(j, {})
+      : s
+        ? t.jsxs('div', {
+            children: [
+              t.jsx('h3', { children: s.name }),
+              t.jsxs('p', { children: ['Height: ', s.height] }),
+              t.jsxs('p', { children: ['Base XP: ', s.base_experience] }),
+              t.jsxs('p', {
+                children: [
+                  'Abilities: ',
+                  s.abilities.map((o) => o.ability.name).join(', '),
+                ],
+              }),
+            ],
+          })
+        : t.jsx('p', { children: 'No details found.' })
+  );
+}
+function Q({
+  currentPage: e,
+  totalItems: s,
+  itemsPerPage: a,
+  onPageChange: i,
+}) {
+  const r = Math.ceil(s / a);
+  if (r <= 1) return null;
+  const o = 5,
+    u = (() => {
+      const n = [];
+      if (r <= o + 4) for (let l = 1; l <= r; l++) n.push(l);
+      else {
+        (n.push(1), e > 3 && n.push('...'));
+        const l = Math.max(2, e - 1),
+          m = Math.min(r - 1, e + 1);
+        for (let h = l; h <= m; h++) n.push(h);
+        (e < r - 2 && n.push('...'), n.push(r));
+      }
+      return n;
+    })();
+  return t.jsx('div', {
+    'data-testid': 'pagination',
+    children: u.map((n, l) =>
+      typeof n == 'number'
+        ? t.jsx(
+            'button',
+            {
+              disabled: n === e,
+              onClick: () => i(n),
+              style: { margin: 2 },
+              children: n,
+            },
+            l
+          )
+        : t.jsx('span', { style: { margin: '0 4px' }, children: n }, l)
+    ),
+  });
+}
+const g = 10;
+function V() {
+  const [e, s] = _(),
+    a = e.get('query') ?? '',
+    i = parseInt(e.get('page') ?? '1', 10),
+    r = e.get('details'),
+    [o, c] = k('searchQuery', a),
+    { items: u, loading: n, error: l } = w(o);
+  d.useEffect(() => {
+    (!e.has('query') || !e.has('page')) && s({ query: '', page: '1' });
+  }, [e, s]);
+  const m = (p) => {
+      (c(p), s({ query: p, page: '1' }));
+    },
+    h = (p) => {
+      s({ query: o, page: p.toString(), ...(r ? { details: r } : {}) });
+    },
+    f = (p) => {
+      s({ query: o, page: i.toString(), details: p });
+    },
+    y = u.slice((i - 1) * g, i * g);
+  return t.jsxs('div', {
+    style: { display: 'flex' },
+    'data-testid': 'search-page',
+    children: [
+      t.jsxs('div', {
+        style: { flex: 1 },
+        children: [
+          t.jsx(L, { value: o, setSearchQuery: c, onSearch: m }),
+          n && t.jsx(j, {}),
+          l && t.jsxs('p', { children: ['Error: ', l] }),
+          t.jsx(M, { items: y, loading: n, error: l, onItemClick: f }),
+          t.jsx(Q, {
+            currentPage: i,
+            totalItems: u.length,
+            itemsPerPage: g,
+            onPageChange: h,
+          }),
+        ],
+      }),
+      t.jsx('div', {
+        style: { flex: 1, padding: '0 20px' },
+        children: r
+          ? t.jsx(D, { name: r })
+          : t.jsx('p', { children: 'Select an item to see details' }),
+      }),
+    ],
+  });
+}
+export { V as default };
