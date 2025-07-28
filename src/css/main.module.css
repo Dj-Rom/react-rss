@@ -1,0 +1,63 @@
+.main {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #6d787322;
+  color: #fff;
+  top: -10px;
+  height: 91vh;
+}
+
+.cardList {
+  padding: 1rem;
+  max-height: 90%;
+  margin: 0 auto;
+  width: 100%;
+  gap: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.card {
+  width: 47%;
+  position: relative;
+  background: #8fbc8f;
+  color: #000;
+  min-height: 139px;
+  max-height: max-content;
+  padding: 0.2rem 1rem;
+  border-radius: 5px;
+  p {
+    margin: 5px auto;
+    text-align: center;
+    font-size: 1.2rem;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  h3::first-letter {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}
+
+.card:hover {
+  background: green;
+}
+
+button[id='errorButton'] {
+  margin-top: 2rem;
+  position: absolute;
+  bottom: 36px;
+  right: 27px;
+  background-color: red;
+}
+
+h2 {
+  margin: 0 auto;
+  color: red;
+}
