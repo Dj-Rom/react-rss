@@ -21,6 +21,9 @@ const mockFetch = (data: unknown, ok = true) => {
   ) as unknown as typeof fetch;
 };
 
+// 🔧 Mock function for required prop
+const mockSetIsOpenDetails = vi.fn();
+
 describe('Details component', () => {
   afterEach(() => {
     vi.resetAllMocks();
@@ -34,7 +37,7 @@ describe('Details component', () => {
       abilities: [],
     });
 
-    render(<Details name="pikachu" />);
+    render(<Details name="pikachu" setIsOpenDetails={mockSetIsOpenDetails} />);
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
     await waitFor(() =>
@@ -53,7 +56,7 @@ describe('Details component', () => {
       ],
     });
 
-    render(<Details name="pikachu" />);
+    render(<Details name="pikachu" setIsOpenDetails={mockSetIsOpenDetails} />);
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
     await screen.findByText('pikachu');
@@ -73,7 +76,9 @@ describe('Details component', () => {
         })
     ) as unknown as typeof fetch;
 
-    render(<Details name="missingno" />);
+    render(
+      <Details name="missingno" setIsOpenDetails={mockSetIsOpenDetails} />
+    );
 
     await screen.findByText('No details found.');
   });
