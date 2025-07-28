@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import useFetchItems from '../hooks/useFetchItems';
@@ -15,11 +15,13 @@ function SearchPage() {
   const queryParam = searchParams.get('query') ?? '';
   const page = parseInt(searchParams.get('page') ?? '1', 10);
   const details = searchParams.get('details');
-  const [isOpenDetails, setIsOpenDetails]=useState(false);
+  const [isOpenDetails, setIsOpenDetails] = useState(false);
   const [searchQuery, setSearchQuery] = React.useState(queryParam);
   const { items, loading, error } = useFetchItems(searchQuery);
 
-  document.getElementById("cardList")?.addEventListener("click",()=> setIsOpenDetails(false))
+  document
+    .getElementById('cardList')
+    ?.addEventListener('click', () => setIsOpenDetails(false));
   useEffect(() => {
     if (!searchParams.has('query') || !searchParams.has('page')) {
       setSearchParams({ query: '', page: '1' });
@@ -47,7 +49,7 @@ function SearchPage() {
   };
 
   const handleSelectDetail = (name: string) => {
-    if(details)setIsOpenDetails(true);
+    if (details) setIsOpenDetails(true);
     setSearchParams({
       query: searchParams.get('query') ?? '',
       page: page.toString(),
@@ -87,7 +89,7 @@ function SearchPage() {
         {details && isOpenDetails ? (
           <Details name={details} setIsOpenDetails={setIsOpenDetails} />
         ) : (
-         ""
+          ''
         )}
       </div>
     </div>
