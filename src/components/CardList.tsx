@@ -7,7 +7,7 @@ type Props = {
 
 const CardList = ({ items, onItemClick }: Props) => {
   return (
-    <div className={styles.cardList} data-testid="card">
+    <div id="cardList" className={styles.cardList} data-testid="card">
       {items.map((item) => (
         <Card
           key={item.name}

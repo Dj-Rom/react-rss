@@ -3,6 +3,7 @@ import Spinner from './Spinner.tsx';
 
 type Props = {
   name: string;
+  setIsOpenDetails: (name: boolean) => void;
 };
 
 type Ability = {
@@ -19,7 +20,8 @@ type PokemonDetails = {
   abilities: Ability[];
 };
 
-export function Details({ name }: Props) {
+export function Details({ name, setIsOpenDetails}: Props) {
+
   const [details, setDetails] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +47,9 @@ export function Details({ name }: Props) {
 
   return (
     <div>
+      <span onClick={()=>{
+        setIsOpenDetails(false)}} style={{position:"relative", top: "15px", left: "49%", cursor:"pointer"}}>X</span>
+      <br/>
       <h3>{details.name}</h3>
       <p>Height: {details.height}</p>
       <p>Base XP: {details.base_experience}</p>
