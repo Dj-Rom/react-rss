@@ -1,0 +1,386 @@
+import {
+  r as u,
+  u as v,
+  j as e,
+  L as C,
+  a as y,
+  b,
+  c as I,
+  d as w,
+  e as E,
+  S as _,
+  f as P,
+  R as N,
+} from './index-Bi4NJPl2.js';
+function R(t) {
+  const [s, n] = u.useState([]),
+    [a, c] = u.useState(!1),
+    [o, i] = u.useState(null);
+  return (
+    u.useEffect(() => {
+      async function h() {
+        (c(!0), i(null));
+        try {
+          const r = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000');
+          if (!r.ok) throw new Error('Failed to fetch items');
+          const l = (await r.json()).results
+            .filter((m) => m.name.toLowerCase().includes(t.toLowerCase()))
+            .map((m) => ({
+              name: m.name,
+              description: `More info at ${m.url}`,
+              url: m.url,
+            }));
+          n(l);
+        } catch (r) {
+          (r instanceof Error ? i(r.message) : i('Unknown error'), n([]));
+        } finally {
+          c(!1);
+        }
+      }
+      h();
+    }, [t]),
+    { items: s, loading: a, error: o }
+  );
+}
+const q = '_about_link_wdltu_1',
+  T = '_header_wdltu_9',
+  D = '_header_left_wdltu_20',
+  U = '_themeToggle_wdltu_28',
+  x = { about_link: q, header: T, header_left: D, themeToggle: U };
+function M() {
+  const { theme: t, toggleTheme: s } = v();
+  return e.jsx('div', {
+    className: t,
+    children: e.jsx('h1', {
+      className: x.themeToggle,
+      onClick: s,
+      'aria-label': 'Toggle theme',
+      children: t === 'light' ? '☀️' : '🌙',
+    }),
+  });
+}
+const O = ({ initialValue: t, onSearch: s }) => {
+    const [n, a] = u.useState(t),
+      c = (i) => {
+        a(i.target.value);
+      },
+      o = (i) => {
+        i.preventDefault();
+        const h = n.trim();
+        s(h);
+      };
+    return e.jsxs('header', {
+      className: x.header,
+      children: [
+        e.jsxs('div', {
+          className: x.header_left,
+          children: [
+            ' ',
+            e.jsx(C, {
+              to: '/about',
+              className: x.about_link,
+              children: 'About',
+            }),
+            e.jsx(M, {}),
+          ],
+        }),
+        e.jsxs('form', {
+          onSubmit: o,
+          role: 'form',
+          children: [
+            e.jsx('input', {
+              type: 'text',
+              value: n,
+              onChange: c,
+              placeholder: 'Search...',
+              'aria-label': 'Search input',
+            }),
+            e.jsx('button', { type: 'submit', children: 'Search' }),
+          ],
+        }),
+      ],
+    });
+  },
+  $ = '_cardLi_11xxt_12',
+  V = '_cardLabel_11xxt_20',
+  F = '_cardList_11xxt_30',
+  A = '_card_11xxt_12',
+  j = { cardLi: $, cardLabel: V, cardList: F, card: A },
+  B = ({ name: t, description: s, url: n, onItemClick: a }) => {
+    const c = y(),
+      o = b((l) => l.itemsReducer.selectedItems),
+      i = `${t}`,
+      h = (l) => {
+        c(I(l));
+      },
+      r = (l) => {
+        c(w(l));
+      },
+      d = (l) => {
+        l.stopPropagation();
+        const m = { id: i, name: t, description: s, detailsUrl: n };
+        l.target.checked ? h(m) : r(i);
+      },
+      f = o.some((l) => l.id === i);
+    return e.jsxs('li', {
+      className: j.cardLi,
+      children: [
+        e.jsx('label', {
+          className: j.cardLabel,
+          children: e.jsx('input', {
+            name: i,
+            type: 'checkbox',
+            checked: f,
+            onChange: d,
+          }),
+        }),
+        e.jsxs('div', {
+          id: i,
+          'data-testid': 'mock-card',
+          className: j.card,
+          onClick: () => a(t),
+          children: [e.jsx('h3', { children: t }), e.jsx('p', { children: s })],
+        }),
+      ],
+    });
+  };
+function H(t) {
+  if (t.length === 0) return;
+  const s = Object.keys(t[0]).join(','),
+    n = t.map((i) =>
+      Object.values(i)
+        .map((h) => `"${String(h).replace(/"/g, '""')}"`)
+        .join(',')
+    ),
+    a = [s, ...n].join(`
+`),
+    c = new Blob([a], { type: 'text/csv;charset=utf-8;' }),
+    o = document.createElement('a');
+  ((o.href = URL.createObjectURL(c)),
+    (o.download = `${t.length}_items.csv`),
+    o.click(),
+    URL.revokeObjectURL(o.href));
+}
+const X = () => {
+    const t = y(),
+      s = b((n) => n.itemsReducer.selectedItems);
+    return s.length === 0
+      ? null
+      : e.jsxs('div', {
+          style: {
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#222',
+            color: '#fff',
+            padding: '1rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            zIndex: 1e3,
+          },
+          children: [
+            e.jsxs('span', {
+              children: [
+                s.length,
+                ' item',
+                s.length > 1 ? 's' : '',
+                ' ',
+                'selected',
+              ],
+            }),
+            e.jsxs('div', {
+              children: [
+                e.jsx('button', {
+                  style: { marginRight: '1rem' },
+                  onClick: () => t(E()),
+                  children: 'Unselect all',
+                }),
+                e.jsx('button', { onClick: () => H(s), children: 'Download' }),
+              ],
+            }),
+          ],
+        });
+  },
+  z = ({ items: t, onItemClick: s }) => {
+    const n = b((a) => a.itemsReducer.selectedItems);
+    return e.jsxs('div', {
+      id: 'cardList',
+      className: j.cardList,
+      'data-testid': 'card',
+      children: [
+        n.length > 0 && e.jsx(X, {}),
+        t.map((a) =>
+          e.jsx(
+            B,
+            {
+              name: a.name,
+              description: a.description,
+              url: a.url,
+              onItemClick: s,
+            },
+            a.name
+          )
+        ),
+      ],
+    });
+  },
+  G = ({ items: t, loading: s, error: n, onItemClick: a }) =>
+    s
+      ? e.jsx('p', { children: 'Loading...' })
+      : n
+        ? e.jsxs('p', { children: ['Error: ', n] })
+        : t.length
+          ? e.jsx(z, { items: t, onItemClick: a })
+          : e.jsx('p', { children: 'No results found.' });
+function Q({ name: t, setIsOpenDetails: s }) {
+  const [n, a] = u.useState(null),
+    [c, o] = u.useState(!1);
+  return (
+    u.useEffect(() => {
+      async function i() {
+        o(!0);
+        try {
+          const h = await fetch(`https://pokeapi.co/api/v2/pokemon/${t}`);
+          if (!h.ok) throw new Error('Failed to load details');
+          const r = await h.json();
+          a(r);
+        } catch {
+          a(null);
+        } finally {
+          o(!1);
+        }
+      }
+      i();
+    }, [t]),
+    c
+      ? e.jsx(_, {})
+      : n
+        ? e.jsxs('div', {
+            children: [
+              e.jsx('span', {
+                onClick: () => {
+                  s(!1);
+                },
+                style: {
+                  position: 'relative',
+                  top: '15px',
+                  left: '49%',
+                  cursor: 'pointer',
+                },
+                children: 'X',
+              }),
+              e.jsx('br', {}),
+              e.jsx('h3', { children: n.name }),
+              e.jsxs('p', { children: ['Height: ', n.height] }),
+              e.jsxs('p', { children: ['Base XP: ', n.base_experience] }),
+              e.jsxs('p', {
+                children: [
+                  'Abilities: ',
+                  n.abilities.map((i) => i.ability.name).join(', '),
+                ],
+              }),
+            ],
+          })
+        : e.jsx('p', { children: 'No details found.' })
+  );
+}
+function J({
+  currentPage: t,
+  totalItems: s,
+  itemsPerPage: n,
+  onPageChange: a,
+}) {
+  const c = Math.ceil(s / n);
+  if (c <= 1) return null;
+  const o = 5,
+    h = (() => {
+      const r = [];
+      if (c <= o + 4) for (let d = 1; d <= c; d++) r.push(d);
+      else {
+        (r.push(1), t > 3 && r.push('...'));
+        const d = Math.max(2, t - 1),
+          f = Math.min(c - 1, t + 1);
+        for (let l = d; l <= f; l++) r.push(l);
+        (t < c - 2 && r.push('...'), r.push(c));
+      }
+      return r;
+    })();
+  return e.jsx('div', {
+    'data-testid': 'pagination',
+    children: h.map((r, d) =>
+      typeof r == 'number'
+        ? e.jsx(
+            'button',
+            {
+              disabled: r === t,
+              onClick: () => a(r),
+              style: { margin: 2 },
+              children: r,
+            },
+            d
+          )
+        : e.jsx('span', { style: { margin: '0 4px' }, children: r }, d)
+    ),
+  });
+}
+const g = 10;
+function W() {
+  const [t, s] = P(),
+    n = t.get('query') ?? '',
+    a = parseInt(t.get('page') ?? '1', 10),
+    c = t.get('details'),
+    [o, i] = u.useState(!1),
+    [h, r] = N.useState(n),
+    { items: d, loading: f, error: l } = R(h);
+  (document.getElementById('cardList')?.addEventListener('click', () => i(!1)),
+    u.useEffect(() => {
+      (!t.has('query') || !t.has('page')) && s({ query: '', page: '1' });
+    }, [t, s]),
+    u.useEffect(() => {
+      const p = Math.ceil(d.length / g) || 1;
+      a > p && s({ query: t.get('query') ?? '', page: '1' });
+    }, [d, a, t, s]));
+  const m = (p) => {
+      (r(p), s({ query: p, page: '1' }));
+    },
+    k = (p) => {
+      s({
+        query: t.get('query') ?? '',
+        page: p.toString(),
+        ...(c ? { details: c } : {}),
+      });
+    },
+    L = (p) => {
+      (c && i(!0),
+        s({ query: t.get('query') ?? '', page: a.toString(), details: p }));
+    },
+    S = d.slice((a - 1) * g, a * g);
+  return e.jsxs('div', {
+    style: { display: 'flex' },
+    'data-test-id': 'search-page',
+    children: [
+      e.jsxs('div', {
+        style: { flex: 1 },
+        children: [
+          e.jsx(O, { initialValue: n, onSearch: m }),
+          f && e.jsx(_, {}),
+          l && e.jsxs('p', { children: ['Error: ', l] }),
+          e.jsx(G, { items: S, loading: f, error: l, onItemClick: L }),
+          e.jsx(J, {
+            currentPage: a,
+            totalItems: d.length,
+            itemsPerPage: g,
+            onPageChange: k,
+          }),
+        ],
+      }),
+      e.jsx('div', {
+        style: { flex: 1, padding: '0 20px' },
+        children: c && o ? e.jsx(Q, { name: c, setIsOpenDetails: i }) : '',
+      }),
+    ],
+  });
+}
+export { W as default };

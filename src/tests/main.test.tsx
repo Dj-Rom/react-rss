@@ -1,16 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import Main from './../components/Main';
-
-type Item = {
-  name: string;
-  description: string;
-};
-
-type CardListProps = {
-  items: Item[];
-  onItemClick: (name: string) => void;
-};
+import type { CardListProps } from '../components/CardList.tsx';
 
 vi.mock('./../components/CardList.tsx', () => ({
   default: ({ items, onItemClick }: CardListProps) => (
@@ -55,8 +46,8 @@ describe('Main component', () => {
 
   it('renders CardList when items are present', () => {
     const items = [
-      { name: 'Item 1', description: 'Desc 1' },
-      { name: 'Item 2', description: 'Desc 2' },
+      { name: 'Item1', description: 'Desc1', url: 'https://example.com/item1' },
+      { name: 'Item2', description: 'Desc2', url: 'https://example.com/item2' },
     ];
 
     render(
@@ -68,7 +59,12 @@ describe('Main component', () => {
       />
     );
     expect(screen.getByTestId('card-list')).toBeInTheDocument();
-    expect(screen.getByText('Item 1 - Desc 1')).toBeInTheDocument();
-    expect(screen.getByText('Item 2 - Desc 2')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, element) => element?.textContent === 'Item1 - Desc1')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText((_, element) => element?.textContent === 'Item2 - Desc2')
+    ).toBeInTheDocument();
   });
 });

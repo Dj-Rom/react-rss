@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
 import Flyout from '../components/Flyout.tsx';
 
-type Props = {
+export type CardListProps = {
   items: Array<{ name: string; description: string; url: string }>;
   onItemClick: (name: string) => void;
 };
 
-const CardList = ({ items, onItemClick }: Props) => {
+const CardList = ({ items, onItemClick }: CardListProps) => {
   const selectedItems = useSelector(
     (state: RootState) => state.itemsReducer.selectedItems
   );

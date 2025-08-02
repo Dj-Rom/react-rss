@@ -5,14 +5,14 @@ import { describe, it, expect, vi } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 import type { FC } from 'react';
 
-type Props = {
+type CardListProps = {
   name: string;
   description: string;
   url: string;
   onItemClick: (name: string) => void;
 };
 vi.mock('./Card', () => ({
-  default: (props: Props) => (
+  default: (props: CardListProps) => (
     <div data-testid="mock-card" onClick={() => props.onItemClick(props.name)}>
       {props.name}
     </div>
