@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import styles from '../css/header.module.css';
 import { Link } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle.tsx';
 
 type Props = {
   initialValue: string;
@@ -22,10 +23,13 @@ const Header = ({ initialValue, onSearch }: Props) => {
 
   return (
     <header className={styles.header}>
-      <Link to={'/about'} className={styles.about_link}>
-        About
-      </Link>
-
+      <div className={styles.header_left}>
+        {' '}
+        <Link to={'/about'} className={styles.about_link}>
+          About
+        </Link>
+        <ThemeToggle />
+      </div>
       <form onSubmit={handleSubmit} role="form">
         <input
           type="text"

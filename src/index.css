@@ -1,6 +1,15 @@
 body {
   margin: 0;
 }
+body.light {
+  background-color: #fff;
+  color: #000;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #fff;
+}
 
 * {
   box-sizing: border-box;

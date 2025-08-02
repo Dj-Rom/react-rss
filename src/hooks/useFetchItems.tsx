@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 type Item = {
   name: string;
   description: string;
+  url: string;
 };
 
 type PokemonApiResult = {
@@ -37,6 +38,7 @@ export default function useFetchItems(query: string) {
         const items: Item[] = filtered.map((item) => ({
           name: item.name,
           description: `More info at ${item.url}`,
+          url: item.url,
         }));
 
         setItems(items);

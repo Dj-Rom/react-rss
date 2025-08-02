@@ -1,45 +1,61 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
-import Card from './../components/Card';
+import { Provider } from 'react-redux';
+import { store } from '../redux/store';
+import Card from '../components/Card';
 
-vi.mock('../css/main.module.css', () => ({
-  default: {
-    card: 'card_mock',
-  },
-}));
+const baseProps = {
+  name: 'Test Item',
+  description: 'This is a test description',
+  url: '/test-url',
+  onItemClick: vi.fn(),
+};
+
+const renderCard = () =>
+  render(
+    <Provider store={store}>
+      <Card {...baseProps} />
+    </Provider>
+  );
 
 describe('Card component', () => {
-  const mockClick = vi.fn();
-
-  const defaultProps = {
-    name: 'Test Item',
-    description: 'This is a test description',
-    onItemClick: mockClick,
-  };
-
   beforeEach(() => {
-    mockClick.mockClear();
+    vi.clearAllMocks();
   });
 
   it('renders the name and description', () => {
-    render(<Card {...defaultProps} />);
+    renderCard();
 
     expect(screen.getByText('Test Item')).toBeInTheDocument();
     expect(screen.getByText('This is a test description')).toBeInTheDocument();
   });
 
-  it('calls onItemClick with the correct name when clicked', () => {
-    render(<Card {...defaultProps} />);
+  it('calls onItemClick with the correct name when the card div is clicked', () => {
+    renderCard();
 
-    fireEvent.click(screen.getByText('Test Item'));
-    expect(mockClick).toHaveBeenCalledTimes(1);
+    const card = screen.getByTestId('mock-card');
+    fireEvent.click(card);
 
-    expect(mockClick).toHaveBeenCalledWith('Test Item');
+    expect(baseProps.onItemClick).toHaveBeenCalledTimes(1);
+    expect(baseProps.onItemClick).toHaveBeenCalledWith('Test Item');
   });
 
-  it('has the correct CSS class', () => {
-    render(<Card {...defaultProps} />);
-    const card = screen.getByText('Test Item').closest('div');
-    expect(card).toHaveClass('card_mock');
+  it('toggles checkbox and dispatches actions', () => {
+    renderCard();
+
+    const checkbox = screen.getByRole('checkbox') as HTMLInputElement;
+
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(false);
+  });
+
+  it('has the correct CSS class on card div', () => {
+    renderCard();
+
+    const card = screen.getByTestId('mock-card');
+    expect(card.className).toMatch(/card/);
   });
 });

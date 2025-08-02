@@ -1,57 +1,81 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
 import CardList from './../components/CardList';
+import { Provider } from 'react-redux';
+import { describe, it, expect, vi } from 'vitest';
+import { configureStore } from '@reduxjs/toolkit';
+import type { FC } from 'react';
 
-vi.mock('./../css/main.module.css', () => ({
-  default: {
-    cardList: 'cardList_mock',
-  },
-}));
-
-interface CardProps {
+type Props = {
   name: string;
   description: string;
+  url: string;
   onItemClick: (name: string) => void;
-}
-
+};
 vi.mock('./Card', () => ({
-  default: ({ name, description, onItemClick }: CardProps) => (
-    <div onClick={() => onItemClick(name)}>
-      <h3>{name}</h3>
-      <p>{description}</p>
+  default: (props: Props) => (
+    <div data-testid="mock-card" onClick={() => props.onItemClick(props.name)}>
+      {props.name}
     </div>
   ),
 }));
 
+vi.mock('../components/Flyout.tsx', () => {
+  const FlyoutMock: FC = () => <div data-testid="flyout" />;
+  return { default: FlyoutMock };
+});
+
+const createStore = (selectedItems: string[]) =>
+  configureStore({
+    reducer: {
+      itemsReducer: (state = { selectedItems }) => state,
+    },
+  });
+
 describe('CardList', () => {
   const items = [
-    { name: 'Item 1', description: 'Description 1' },
-    { name: 'Item 2', description: 'Description 2' },
+    { name: 'Item1', description: 'Desc1', url: 'url1' },
+    { name: 'Item2', description: 'Desc2', url: 'url2' },
   ];
-  const mockClick = vi.fn();
 
-  beforeEach(() => {
-    mockClick.mockClear();
-  });
+  it('renders items and calls onItemClick when card clicked', () => {
+    const store = createStore([]);
 
-  it('renders container with correct class and test ID', () => {
-    const { container } = render(
-      <CardList items={items} onItemClick={mockClick} />
+    const onItemClick = vi.fn();
+
+    render(
+      <Provider store={store}>
+        <CardList items={items} onItemClick={onItemClick} />
+      </Provider>
     );
-    const cardContainer = screen.getByTestId('card');
-    expect(cardContainer).toHaveClass('cardList_mock');
-    expect(container.firstChild).toBe(cardContainer);
+
+    const cards = screen.getAllByTestId('mock-card');
+    expect(cards).toHaveLength(items.length);
+
+    fireEvent.click(cards[0]);
+    expect(onItemClick).toHaveBeenCalledWith('Item1');
   });
 
-  it('renders all items as cards', () => {
-    render(<CardList items={items} onItemClick={mockClick} />);
-    expect(screen.getByText('Item 1')).toBeInTheDocument();
-    expect(screen.getByText('Item 2')).toBeInTheDocument();
+  it('renders Flyout if selectedItems length > 0', () => {
+    const store = createStore(['selected']);
+
+    render(
+      <Provider store={store}>
+        <CardList items={items} onItemClick={() => {}} />
+      </Provider>
+    );
+
+    expect(screen.getByTestId('flyout')).toBeInTheDocument();
   });
 
-  it('calls onItemClick with correct name when a card is clicked', () => {
-    render(<CardList items={items} onItemClick={mockClick} />);
-    fireEvent.click(screen.getByText('Item 2'));
-    expect(mockClick).toHaveBeenCalledWith('Item 2');
+  it('does not render Flyout if selectedItems is empty', () => {
+    const store = createStore([]);
+
+    render(
+      <Provider store={store}>
+        <CardList items={items} onItemClick={() => {}} />
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('flyout')).not.toBeInTheDocument();
   });
 });

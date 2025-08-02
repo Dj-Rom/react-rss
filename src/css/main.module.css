@@ -9,6 +9,24 @@
   height: 91vh;
 }
 
+.cardLi {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 28%;
+  min-width: 150px;
+  justify-content: center;
+
+  .cardLabel {
+    position: absolute;
+    left: 0px;
+    height: 20px;
+    input {
+      width: 100%;
+    }
+  }
+}
+
 .cardList {
   padding: 1rem;
   max-height: 90%;
@@ -23,7 +41,7 @@
 }
 
 .card {
-  width: 47%;
+  width: 77%;
   position: relative;
   background: #8fbc8f;
   color: #000;
@@ -31,6 +49,7 @@
   max-height: max-content;
   padding: 0.2rem 1rem;
   border-radius: 5px;
+
   p {
     margin: 5px auto;
     text-align: center;
@@ -39,6 +58,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
+
   h3::first-letter {
     text-transform: uppercase;
     font-weight: bold;

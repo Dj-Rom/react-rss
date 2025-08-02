@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import NotFound from '../components/NotFound';
+import NotFound from '../pages/NotFound.tsx';
 
 describe('NotFound page', () => {
   it('renders correctly and handles hover events on the link', () => {

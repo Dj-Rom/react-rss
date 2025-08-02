@@ -1,42 +1,54 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import App from '../App';
 
-function navigate(path: string) {
-  window.history.pushState({}, '', `/react-rss${path}`);
-}
+import App from './../App';
 
-describe('App routing with basename', () => {
-  it('renders SearchPage on "/" route', async () => {
-    navigate('/');
+vi.mock('../pages/SearchPage', () => ({
+  default: () => <div data-testid="search-page">SearchPage Mock</div>,
+}));
+
+vi.mock('../pages/About.tsx', () => ({
+  default: () => <div data-testid="about-page">About Mock</div>,
+}));
+
+vi.mock('../pages/NotFound', () => ({
+  default: () => <div data-testid="notfound-page">NotFound Mock</div>,
+}));
+
+vi.mock('../components/Spinner', () => ({
+  default: () => <div data-testid="spinner">Loading...</div>,
+}));
+
+describe('App routing', () => {
+  it('renders SearchPage at "/" route', async () => {
+    window.history.pushState({}, 'SearchPage', '/react-rss/');
+
     render(<App />);
 
-    expect(screen.getByRole('status')).toBeInTheDocument(); // Spinner
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByTestId('search-page')).toBeInTheDocument();
     });
   });
 
-  it('renders About page on "/about" route', async () => {
-    navigate('/about');
-    render(<App />);
+  it('renders About page at "/about" route', async () => {
+    window.history.pushState({}, 'About', '/react-rss/about');
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    render(<App />);
 
     await waitFor(() => {
       expect(screen.getByTestId('about-page')).toBeInTheDocument();
     });
   });
 
-  it('renders NotFound404 on unknown route', async () => {
-    navigate('/non-existent');
+  it('renders NotFound page at unknown route', async () => {
+    window.history.pushState({}, 'NotFound', '/react-rss/unknown');
+
     render(<App />);
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
-
     await waitFor(() => {
-      expect(screen.getByTestId('not-found')).toBeInTheDocument();
+      expect(screen.getByTestId('notfound-page')).toBeInTheDocument();
     });
   });
 });

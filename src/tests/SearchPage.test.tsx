@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import SearchPage from './../components/SearchPage';
+import SearchPage from '../pages/SearchPage.tsx';
 
 const mockSetSearchParams = vi.fn();
 

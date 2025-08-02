@@ -15,8 +15,20 @@
   background-color: #a9a9a9;
   color: #fff;
   height: 5vh;
+  align-items: center;
 }
+.header_left {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 
+  display: flex;
+}
+.themeToggle {
+  cursor: pointer;
+  margin-left: 40px;
+}
 form {
   display: flex;
   gap: 8px;

@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+
 import Spinner from './components/Spinner';
 
-const SearchPage = lazy(() => import('./components/SearchPage'));
-const About = lazy(() => import('./components/About'));
-const NotFound = lazy(() => import('./components/NotFound'));
+const SearchPage = lazy(() => import('./pages/SearchPage.tsx'));
+const About = lazy(() => import('./pages/About.tsx'));
+const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 
-function App() {
+function AppContent() {
   return (
     <BrowserRouter basename="/react-rss/">
       <Suspense fallback={<Spinner />}>
@@ -18,6 +19,10 @@ function App() {
       </Suspense>
     </BrowserRouter>
   );
+}
+
+function App() {
+  return <AppContent />;
 }
 
 export default App;

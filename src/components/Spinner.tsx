@@ -17,10 +17,9 @@ const Spinner = () => {
         }
       `}</style>
 
-      <div role="status" aria-label="Loading">
+      <div role="status" data-testid="spinner" aria-label="Loading">
         <div className="spinner"></div>
         <span style={{ display: 'none' }}>Loading...</span>{' '}
-        {/* optional text for screen readers */}
       </div>
     </>
   );
