@@ -25,7 +25,7 @@
           <div class="fl pad1y space-right2">
             <span class="strong">100% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">7/7</span>
+            <span class="fraction">8/8</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -37,13 +37,13 @@
           <div class="fl pad1y space-right2">
             <span class="strong">100% </span>
             <span class="quiet">Functions</span>
-            <span class="fraction">4/4</span>
+            <span class="fraction">5/5</span>
           </div>
 
           <div class="fl pad1y space-right2">
             <span class="strong">100% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">4/4</span>
+            <span class="fraction">5/5</span>
           </div>
         </div>
         <p class="quiet">
@@ -82,7 +82,13 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -105,15 +111,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+&nbsp;
 import Spinner from './components/Spinner';
 &nbsp;
-const SearchPage = lazy(() =&gt; import('./components/SearchPage'));
-const About = lazy(() =&gt; import('./components/About'));
-const NotFound = lazy(() =&gt; import('./components/NotFound'));
+const SearchPage = lazy(() =&gt; import('./pages/SearchPage.tsx'));
+const About = lazy(() =&gt; import('./pages/About.tsx'));
+const NotFound = lazy(() =&gt; import('./pages/NotFound.tsx'));
 &nbsp;
-function App() {
+function AppContent() {
   return (
     &lt;BrowserRouter basename="/react-rss/"&gt;
       &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
@@ -125,6 +136,10 @@ function App() {
       &lt;/Suspense&gt;
     &lt;/BrowserRouter&gt;
   );
+}
+&nbsp;
+function App() {
+  return &lt;AppContent /&gt;;
 }
 &nbsp;
 export default App;
@@ -142,7 +157,7 @@ export default App;
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-07-25T15:10:03.238Z
+      at 2025-08-02T15:54:50.113Z
     </div>
     <script src="../prettify.js"></script>
     <script>

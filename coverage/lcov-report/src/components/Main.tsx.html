@@ -95,23 +95,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import CardList from './CardList.tsx';
 &nbsp;
-type Item = {
+type CardListItem = {
   name: string;
   description: string;
+  url: string;
 };
 &nbsp;
 type Props = {
-  items: Item[];
+  items: CardListItem[];
   loading: boolean;
   error: string | null;
   onItemClick: (name: string) =&gt; void;
@@ -121,7 +122,6 @@ const Main = ({ items, loading, error, onItemClick }: Props) =&gt; {
   if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
   if (error) return &lt;p&gt;Error: {error}&lt;/p&gt;;
   if (!items.length) return &lt;p&gt;No results found.&lt;/p&gt;;
-&nbsp;
   return &lt;CardList items={items} onItemClick={onItemClick} /&gt;;
 };
 export default Main;
@@ -139,7 +139,7 @@ export default Main;
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-07-25T15:10:03.238Z
+      at 2025-08-02T15:54:50.113Z
     </div>
     <script src="../../prettify.js"></script>
     <script>

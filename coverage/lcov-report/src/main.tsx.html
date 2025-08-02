@@ -76,7 +76,17 @@
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -87,6 +97,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -99,6 +113,9 @@ import ErrorBoundary from './ErrorBoundary.tsx';
 &nbsp;
 import './index.css';
 import App from './App.tsx';
+import { ThemeProvider } from './context/ThemeContext.tsx';
+import { Provider } from 'react-redux';
+import { store } from './redux/store.tsx';
 &nbsp;
 const container = <span class="cstat-no" title="statement not covered" >document.getElementById('root') as HTMLElement;</span>
 const root = <span class="cstat-no" title="statement not covered" >createRoot(container);</span>
@@ -106,7 +123,11 @@ const root = <span class="cstat-no" title="statement not covered" >createRoot(co
 <span class="cstat-no" title="statement not covered" >root.render(</span>
   &lt;StrictMode&gt;
     &lt;ErrorBoundary&gt;
-      &lt;App /&gt;
+      &lt;Provider store={store}&gt;
+        &lt;ThemeProvider&gt;
+          &lt;App /&gt;
+        &lt;/ThemeProvider&gt;
+      &lt;/Provider&gt;
     &lt;/ErrorBoundary&gt;
   &lt;/StrictMode&gt;
 );
@@ -124,7 +145,7 @@ const root = <span class="cstat-no" title="statement not covered" >createRoot(co
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-07-25T15:10:03.238Z
+      at 2025-08-02T15:54:50.113Z
     </div>
     <script src="../prettify.js"></script>
     <script>
