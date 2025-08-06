@@ -1,70 +1,95 @@
-import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
-import Main from './../components/Main';
-import type { CardListProps } from '../components/CardList.tsx';
+import { render, screen, fireEvent } from '@testing-library/react';
+import Main, { type CardListItem } from '../components/Main';
+import CardList from '../components/CardList';
+import { vi, afterEach, describe, test, expect } from 'vitest';
 
-vi.mock('./../components/CardList.tsx', () => ({
-  default: ({ items, onItemClick }: CardListProps) => (
-    <div data-testid="card-list">
-      {items.map((item) => (
-        <div key={item.name} onClick={() => onItemClick(item.name)}>
-          {item.name} - {item.description}
-        </div>
-      ))}
-    </div>
-  ),
+// Mock CardList with Vitest syntax
+vi.mock('../components/CardList', () => ({
+  default: vi.fn(() => <div>CardList Mock</div>),
 }));
 
 describe('Main component', () => {
-  const mockClick = vi.fn();
+  const mockOnItemClick = vi.fn();
 
-  it('renders loading state', () => {
-    render(
-      <Main items={[]} loading={true} error={null} onItemClick={mockClick} />
-    );
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('renders error state', () => {
+  test('renders loading state', () => {
+    render(
+      <Main
+        items={[]}
+        loading={true}
+        error={null}
+        onItemClick={mockOnItemClick}
+      />
+    );
+    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+  });
+
+  test('renders error message', () => {
+    const errorMsg = 'Failed to fetch';
     render(
       <Main
         items={[]}
         loading={false}
-        error="Failed to fetch"
-        onItemClick={mockClick}
+        error={errorMsg}
+        onItemClick={mockOnItemClick}
       />
     );
-    expect(screen.getByText('Error: Failed to fetch')).toBeInTheDocument();
+    expect(
+      screen.getByText(new RegExp(`error: ${errorMsg}`, 'i'))
+    ).toBeInTheDocument();
   });
 
-  it('renders empty state', () => {
+  test('renders no results message when items is empty', () => {
     render(
-      <Main items={[]} loading={false} error={null} onItemClick={mockClick} />
+      <Main
+        items={[]}
+        loading={false}
+        error={null}
+        onItemClick={mockOnItemClick}
+      />
     );
-    expect(screen.getByText('No results found.')).toBeInTheDocument();
+    expect(screen.getByText(/no results found/i)).toBeInTheDocument();
   });
 
-  it('renders CardList when items are present', () => {
-    const items = [
-      { name: 'Item1', description: 'Desc1', url: 'https://example.com/item1' },
-      { name: 'Item2', description: 'Desc2', url: 'https://example.com/item2' },
+  test('renders CardList with items and handles onItemClick', () => {
+    const items: CardListItem[] = [
+      { name: 'Item 1', url: 'url1' },
+      { name: 'Item 2', url: 'url2' },
     ];
+
+    // Update mock implementation for CardList
+    (CardList as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      ({ items, onItemClick }) => (
+        <div>
+          {items.map((item: CardListItem) => (
+            <button key={item.name} onClick={() => onItemClick(item.name)}>
+              {item.name}
+            </button>
+          ))}
+        </div>
+      )
+    );
 
     render(
       <Main
         items={items}
         loading={false}
         error={null}
-        onItemClick={mockClick}
+        onItemClick={mockOnItemClick}
       />
     );
-    expect(screen.getByTestId('card-list')).toBeInTheDocument();
-    expect(
-      screen.getByText((_, element) => element?.textContent === 'Item1 - Desc1')
-    ).toBeInTheDocument();
 
-    expect(
-      screen.getByText((_, element) => element?.textContent === 'Item2 - Desc2')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Item 1')).toBeInTheDocument();
+    expect(screen.getByText('Item 2')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Item 1'));
+    fireEvent.click(screen.getByText('Item 2'));
+
+    expect(mockOnItemClick).toHaveBeenCalledTimes(2);
+    expect(mockOnItemClick).toHaveBeenCalledWith('Item 1');
+    expect(mockOnItemClick).toHaveBeenCalledWith('Item 2');
   });
 });

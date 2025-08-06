@@ -7,9 +7,10 @@ import react from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import reactCompiler from 'eslint-plugin-react-compiler';
-
 export default tseslint.config(
-  { ignores: ['dist', 'coverage/**'] }, // <-- use ignores here for files/folders to ignore
+  { ignores: ['dist', 'coverage/**'] },
+
+  // Your main config for all files
   {
     extends: [
       js.configs.recommended,
@@ -41,6 +42,16 @@ export default tseslint.config(
       react: {
         version: 'detect',
       },
+    },
+  },
+
+  // 🧪 Override for test files
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      // Add more rule overrides as needed
     },
   }
 );

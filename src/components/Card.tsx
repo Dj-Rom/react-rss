@@ -1,24 +1,31 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, type Item, removeItem } from './../redux/slices/ItemsSlices';
+import {
+  addItem,
+  type ItemSlice,
+  removeItem,
+} from './../redux/slices/ItemsSlices';
 import type { ChangeEvent } from 'react';
 import type { RootState } from '../redux/store';
 import styles from './../css/main.module.css';
-type Props = {
+import { useGetPokemonByIdQuery } from '../redux/slices/apiSlice.tsx';
+import Spinner from './Spinner.tsx';
+
+export type CartProps = {
   name: string;
-  description: string;
   url: string;
   onItemClick: (name: string) => void;
 };
 
-const Card = ({ name, description, url, onItemClick }: Props) => {
+const Card = ({ name, url, onItemClick }: CartProps) => {
   const dispatch = useDispatch();
   const selectedItems = useSelector(
-    (state: RootState) => state.itemsReducer.selectedItems
+    (state: RootState) => state.items.selectedItems
   );
 
+  const id = Number(url.split('/').filter(Boolean).pop());
+  const { data, isLoading, isError, error } = useGetPokemonByIdQuery(id);
   const cardId = `${name}`;
-
-  const handleCheck = (item: Item) => {
+  const handleCheck = (item: ItemSlice) => {
     dispatch(addItem(item));
   };
 
@@ -29,13 +36,11 @@ const Card = ({ name, description, url, onItemClick }: Props) => {
   const handleLongClick = (event: ChangeEvent<HTMLInputElement>) => {
     event.stopPropagation();
 
-    const item: Item = {
+    const item: ItemSlice = {
       id: cardId,
       name,
-      description,
       detailsUrl: url,
     };
-
     if (event.target.checked) {
       handleCheck(item);
     } else {
@@ -43,7 +48,11 @@ const Card = ({ name, description, url, onItemClick }: Props) => {
     }
   };
 
-  const isChecked = selectedItems.some((item) => item.id === cardId);
+  const isChecked = selectedItems.some(
+    (item: { id: string }) => item.id === cardId
+  );
+  if (isLoading) return <Spinner />;
+  if (isError) return <span>{error.toString()}</span>;
 
   return (
     <li className={styles.cardLi}>
@@ -62,7 +71,8 @@ const Card = ({ name, description, url, onItemClick }: Props) => {
         onClick={() => onItemClick(name)}
       >
         <h3>{name}</h3>
-        <p>{description}</p>
+        <p>Height: {data?.height ?? 'no information'},</p>
+        <p>Weight: {data?.weight ?? 'no information'}</p>
       </div>
     </li>
   );

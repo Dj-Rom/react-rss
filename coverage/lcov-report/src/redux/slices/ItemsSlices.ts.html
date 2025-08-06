@@ -23,9 +23,9 @@
         </h1>
         <div class="clearfix">
           <div class="fl pad1y space-right2">
-            <span class="strong">80% </span>
+            <span class="strong">90% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">8/10</span>
+            <span class="fraction">9/10</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -35,15 +35,15 @@
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">60% </span>
+            <span class="strong">80% </span>
             <span class="quiet">Functions</span>
-            <span class="fraction">3/5</span>
+            <span class="fraction">4/5</span>
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">80% </span>
+            <span class="strong">90% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">8/10</span>
+            <span class="fraction">9/10</span>
           </div>
         </div>
         <p class="quiet">
@@ -103,8 +103,7 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -116,12 +115,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,25 +139,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 &nbsp;
-export interface Item {
+export interface ItemSlice {
   id: string;
   name: string;
-  description: string;
   detailsUrl: string;
 }
 &nbsp;
 interface ItemsState {
-  selectedItems: Item[];
+  selectedItems: ItemSlice[];
 }
 &nbsp;
 const initialState: ItemsState = {
@@ -170,7 +167,7 @@ const itemsSlice = createSlice({
   name: 'itemsSlice',
   initialState,
   reducers: {
-    addItem(state, action: PayloadAction&lt;Item&gt;) {
+    addItem(state, action: PayloadAction&lt;ItemSlice&gt;) {
       const exists = state.selectedItems.some(
 <span class="fstat-no" title="function not covered" >        (i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >item.id === action.payload.id</span>
       );
@@ -185,8 +182,8 @@ const itemsSlice = createSlice({
       );
     },
 &nbsp;
-<span class="fstat-no" title="function not covered" >    clearItems(s</span>tate) {
-<span class="cstat-no" title="statement not covered" >      state.selectedItems = [];</span>
+    clearItems(state) {
+      state.selectedItems = [];
     },
   },
 });
@@ -208,7 +205,7 @@ export default itemsSlice.reducer;
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-08-02T15:54:50.113Z
+      at 2025-08-06T14:46:24.956Z
     </div>
     <script src="../../../prettify.js"></script>
     <script>

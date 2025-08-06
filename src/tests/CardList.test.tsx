@@ -1,81 +1,94 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import CardList from './../components/CardList';
+import CardList from '../components/CardList';
 import { Provider } from 'react-redux';
-import { describe, it, expect, vi } from 'vitest';
-import { configureStore } from '@reduxjs/toolkit';
-import type { FC } from 'react';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { vi } from 'vitest';
 
-type CardListProps = {
-  name: string;
-  description: string;
-  url: string;
-  onItemClick: (name: string) => void;
-};
-vi.mock('./Card', () => ({
-  default: (props: CardListProps) => (
-    <div data-testid="mock-card" onClick={() => props.onItemClick(props.name)}>
-      {props.name}
+vi.mock('../components/Flyout', () => ({
+  default: () => <div data-testid="flyout" />,
+}));
+
+vi.mock('../components/Card', () => ({
+  default: ({
+    name,
+    onItemClick,
+  }: {
+    name: string;
+    onItemClick: (name: string) => void;
+  }) => (
+    <div data-testid="card-item" onClick={() => onItemClick(name)}>
+      {name}
     </div>
   ),
 }));
 
-vi.mock('../components/Flyout.tsx', () => {
-  const FlyoutMock: FC = () => <div data-testid="flyout" />;
-  return { default: FlyoutMock };
+const itemsSlice = createSlice({
+  name: 'items',
+  initialState: { selectedItems: [] as string[] },
+  reducers: {
+    setSelectedItems(state, action) {
+      state.selectedItems = action.payload;
+    },
+  },
 });
 
-const createStore = (selectedItems: string[]) =>
-  configureStore({
+const { setSelectedItems } = itemsSlice.actions;
+
+// Helper function to render with Redux store and set selectedItems
+function renderWithSelectedItems(
+  selectedItems: string[],
+  items: Array<{ name: string; url: string }>,
+  onItemClick: (name: string) => void
+) {
+  const store = configureStore({
     reducer: {
-      itemsReducer: (state = { selectedItems }) => state,
+      items: itemsSlice.reducer,
     },
   });
 
-describe('CardList', () => {
+  store.dispatch(setSelectedItems(selectedItems));
+
+  return render(
+    <Provider store={store}>
+      <CardList items={items} onItemClick={onItemClick} />
+    </Provider>
+  );
+}
+
+describe('CardList component', () => {
   const items = [
-    { name: 'Item1', description: 'Desc1', url: 'url1' },
-    { name: 'Item2', description: 'Desc2', url: 'url2' },
+    { name: 'pikachu', url: '/pikachu' },
+    { name: 'bulbasaur', url: '/bulbasaur' },
   ];
 
-  it('renders items and calls onItemClick when card clicked', () => {
-    const store = createStore([]);
+  let onItemClick: (name: string) => void;
 
-    const onItemClick = vi.fn();
-
-    render(
-      <Provider store={store}>
-        <CardList items={items} onItemClick={onItemClick} />
-      </Provider>
-    );
-
-    const cards = screen.getAllByTestId('mock-card');
-    expect(cards).toHaveLength(items.length);
-
-    fireEvent.click(cards[0]);
-    expect(onItemClick).toHaveBeenCalledWith('Item1');
+  beforeEach(() => {
+    onItemClick = vi.fn();
   });
 
-  it('renders Flyout if selectedItems length > 0', () => {
-    const store = createStore(['selected']);
+  test('renders all items passed in props', () => {
+    renderWithSelectedItems([], items, onItemClick);
+    const cardItems = screen.getAllByTestId('card-item');
+    expect(cardItems).toHaveLength(items.length);
+    expect(cardItems[0]).toHaveTextContent('pikachu');
+    expect(cardItems[1]).toHaveTextContent('bulbasaur');
+  });
 
-    render(
-      <Provider store={store}>
-        <CardList items={items} onItemClick={() => {}} />
-      </Provider>
-    );
-
+  test('renders Flyout if there are selected items', () => {
+    renderWithSelectedItems(['pikachu'], items, onItemClick);
     expect(screen.getByTestId('flyout')).toBeInTheDocument();
   });
 
-  it('does not render Flyout if selectedItems is empty', () => {
-    const store = createStore([]);
+  test('does not render Flyout if selectedItems is empty', () => {
+    renderWithSelectedItems([], items, onItemClick);
+    expect(screen.queryByTestId('flyout')).toBeNull();
+  });
 
-    render(
-      <Provider store={store}>
-        <CardList items={items} onItemClick={() => {}} />
-      </Provider>
-    );
-
-    expect(screen.queryByTestId('flyout')).not.toBeInTheDocument();
+  test('calls onItemClick when a card is clicked', () => {
+    renderWithSelectedItems([], items, onItemClick);
+    const firstCard = screen.getAllByTestId('card-item')[0];
+    fireEvent.click(firstCard);
+    expect(onItemClick).toHaveBeenCalledWith('pikachu');
   });
 });

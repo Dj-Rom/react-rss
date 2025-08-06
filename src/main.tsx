@@ -6,8 +6,7 @@ import './index.css';
 import App from './App.tsx';
 import { ThemeProvider } from './context/ThemeContext.tsx';
 import { Provider } from 'react-redux';
-import { store } from './redux/store.tsx';
-
+import { store } from './redux/store';
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 

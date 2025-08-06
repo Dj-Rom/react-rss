@@ -1,67 +1,72 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { renderHook } from '@testing-library/react';
-import { ThemeProvider, useTheme } from './../context/ThemeContext.tsx';
+import { ThemeProvider, ThemeContext } from '../context/ThemeContext';
 
-describe('useTheme hook', () => {
-  it('throws error if used outside ThemeProvider', () => {
-    expect(() => {
-      renderHook(() => useTheme());
-    }).toThrow('useTheme must be used within a ThemeProvider');
-  });
-});
+describe('ThemeContext and ThemeProvider', () => {
+  test('provides default theme as light', () => {
+    const TestComponent = () => {
+      const { theme } = React.useContext(ThemeContext);
+      return <div>Theme is {theme}</div>;
+    };
 
-const TestComponent = () => {
-  const { theme, toggleTheme } = useTheme();
-  return (
-    <>
-      <span data-testid="theme">{theme}</span>
-      <button onClick={toggleTheme}>Toggle Theme</button>
-    </>
-  );
-};
-
-describe('ThemeProvider', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    document.body.className = '';
-  });
-
-  it('provides default theme "light" and sets body class and localStorage', () => {
     render(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId('theme').textContent).toBe('light');
+    expect(screen.getByText(/Theme is light/i)).toBeInTheDocument();
+  });
+
+  test('toggles theme from light to dark and back', () => {
+    const TestComponent = () => {
+      const { theme, toggleTheme } = React.useContext(ThemeContext);
+      return (
+        <>
+          <div>Theme is {theme}</div>
+          <button onClick={toggleTheme}>Toggle</button>
+        </>
+      );
+    };
+
+    render(
+      <ThemeProvider>
+        <TestComponent />
+      </ThemeProvider>
+    );
+
+    const themeText = screen.getByText(/Theme is light/i);
+    const toggleButton = screen.getByRole('button', { name: /toggle/i });
+
+    expect(themeText).toBeInTheDocument();
     expect(document.body.className).toBe('light');
-    expect(localStorage.getItem('theme')).toBe('light');
-  });
 
-  it('toggles theme from light to dark and updates DOM and localStorage', () => {
-    render(
-      <ThemeProvider>
-        <TestComponent />
-      </ThemeProvider>
-    );
-
-    fireEvent.click(screen.getByText('Toggle Theme'));
-
-    expect(screen.getByTestId('theme').textContent).toBe('dark');
+    fireEvent.click(toggleButton);
+    expect(screen.getByText(/Theme is dark/i)).toBeInTheDocument();
     expect(document.body.className).toBe('dark');
-    expect(localStorage.getItem('theme')).toBe('dark');
+
+    fireEvent.click(toggleButton);
+    expect(screen.getByText(/Theme is light/i)).toBeInTheDocument();
+    expect(document.body.className).toBe('light');
   });
 
-  it('initializes theme from localStorage correctly', () => {
+  test('reads theme from localStorage on mount', () => {
     localStorage.setItem('theme', 'dark');
 
+    const TestComponent = () => {
+      const { theme } = React.useContext(ThemeContext);
+      return <div>Theme is {theme}</div>;
+    };
+
     render(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId('theme').textContent).toBe('dark');
+    expect(screen.getByText(/Theme is dark/i)).toBeInTheDocument();
     expect(document.body.className).toBe('dark');
+
+    localStorage.removeItem('theme');
   });
 });

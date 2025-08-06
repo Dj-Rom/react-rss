@@ -1,6 +1,6 @@
 type PaginationProps = {
   currentPage: number;
-  totalItems: number;
+  totalItems: number | undefined;
   itemsPerPage: number;
   onPageChange: (page: number) => void;
 };
@@ -11,7 +11,7 @@ export function Pagination({
   itemsPerPage,
   onPageChange,
 }: PaginationProps) {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems ? totalItems : 0 / itemsPerPage);
   if (totalPages <= 1) return null;
 
   const maxVisiblePages = 5;

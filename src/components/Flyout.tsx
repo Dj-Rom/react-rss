@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../redux/store';
-import { clearItems } from '../redux/slices/ItemsSlices.ts';
-import { type Item } from '../api.ts';
+import { clearItems, type ItemSlice } from '../redux/slices/ItemsSlices.ts';
 
-function downloadCSV(items: Item[]) {
+function downloadCSV(items: ItemSlice[]) {
   if (items.length === 0) return;
 
   const header = Object.keys(items[0]).join(',');
@@ -26,14 +25,15 @@ function downloadCSV(items: Item[]) {
 
 const Flyout: React.FC = () => {
   const dispatch = useDispatch();
-  const selectedItems = useSelector(
-    (state: RootState) => state.itemsReducer.selectedItems
+  const selectedItems: ItemSlice[] = useSelector(
+    (state: RootState) => state.items.selectedItems
   );
 
   if (selectedItems.length === 0) return null;
 
   return (
     <div
+      data-testid="flyout"
       style={{
         position: 'fixed',
         bottom: 0,

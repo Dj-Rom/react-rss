@@ -1,5 +1,5 @@
-import { j as e, L as r } from './index-Bi4NJPl2.js';
-const o = () =>
+import { j as e, L as s } from './index-DNkFdUPU.js';
+const t = () =>
   e.jsxs(e.Fragment, {
     children: [
       e.jsxs('section', {
@@ -9,6 +9,8 @@ const o = () =>
           e.jsx('span', {
             children: 'I`‘m originally from Belarus, but now live in Poland',
           }),
+          e.jsx('span', { children: 'My Skills:' }),
+          e.jsx('p', { children: 'JS,TS,PHP,HTML,CSS,SCSS,React,Redux,' }),
           e.jsx('br', {}),
           e.jsx('a', {
             href: 'https://rs.school/courses/reactjs',
@@ -18,7 +20,7 @@ const o = () =>
           }),
         ],
       }),
-      e.jsx(r, { to: '/', children: 'Go to home page' }),
+      e.jsx(s, { to: '/', children: 'Go to home page' }),
     ],
   });
-export { o as default };
+export { t as default };

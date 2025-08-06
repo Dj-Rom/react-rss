@@ -1,4 +1,4 @@
-import { j as o, L as t } from './index-Bi4NJPl2.js';
+import { j as o, L as t } from './index-DNkFdUPU.js';
 const n = () =>
   o.jsxs('div', {
     'data-testid': 'not-found',

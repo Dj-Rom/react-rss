@@ -1,89 +1,162 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
+import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SearchPage from '../pages/SearchPage.tsx';
 
-const mockSetSearchParams = vi.fn();
+vi.mock('react-router-dom', () => {
+  const actual = vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useSearchParams: () => {
+      const [query, setQuery] = React.useState(
+        new Map([
+          ['query', ''],
+          ['page', '1'],
+        ])
+      );
 
-vi.mock('react-router-dom', () => ({
-  useSearchParams: () => [
-    new URLSearchParams('query=test&page=1'),
-    mockSetSearchParams,
-  ],
-}));
+      return [
+        {
+          get: (key: string) => query.get(key) ?? null,
+          has: (key: string) => query.has(key),
+        },
+        (newParams: Record<string, string>) => {
+          setQuery(new Map(Object.entries(newParams)));
+        },
+      ];
+    },
+  };
+});
 
-vi.mock('./../hooks/useFetchItems', () => ({
-  default: () => ({
-    items: [
-      { name: 'Item 1' },
-      { name: 'Item 2' },
-      { name: 'Item 3' },
-      { name: 'Item 4' },
-      { name: 'Item 5' },
-      { name: 'Item 6' },
-      { name: 'Item 7' },
-      { name: 'Item 8' },
-      { name: 'Item 9' },
-      { name: 'Item 10' },
-      { name: 'Item 11' },
-    ],
-    loading: false,
-    error: null,
-  }),
-}));
+import * as apiSlice from '../redux/slices/apiSlice.tsx';
 
-type HeaderProps = {
-  onSearchInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearch?: () => void;
-};
-
-vi.mock('./../components/Header', () => ({
-  default: (props: HeaderProps) => (
-    <div data-testid="header">
-      Mock Header
-      <input
-        type="text"
-        aria-label="search input"
-        onChange={props.onSearchInputChange}
-        defaultValue=""
-      />
-      <button onClick={props.onSearch}>Search Pokémon</button>
-    </div>
+vi.mock('../components/Header.tsx', () => ({
+  default: ({ onSearch }: { onSearch: (query: string) => void }) => (
+    <button onClick={() => onSearch('pikachu')}>Search Pikachu</button>
   ),
 }));
 
-type Item = { name: string };
-type MainProps = {
-  items: Item[];
-  onItemClick: (name: string) => void;
-};
-
-vi.mock('./../components/Main', () => ({
-  default: (props: MainProps) => (
-    <div data-testid="main">
-      {props.items.map((item) => (
-        <button key={item.name} onClick={() => props.onItemClick(item.name)}>
+vi.mock('../components/Main.tsx', () => ({
+  default: ({ items, onItemClick }: any) => (
+    <ul data-testid="main-list">
+      {items.map((item: any) => (
+        <li key={item.name} onClick={() => onItemClick(item.name)}>
           {item.name}
-        </button>
+        </li>
       ))}
-    </div>
+    </ul>
   ),
 }));
 
-describe('SearchPage Component', () => {
+vi.mock('../components/Pagination.tsx', () => ({
+  Pagination: ({ currentPage, onPageChange }: any) => (
+    <button onClick={() => onPageChange(currentPage + 1)}>Next Page</button>
+  ),
+}));
+
+vi.mock('../components/Spinner.tsx', () => ({
+  default: () => <div data-testid="spinner">Loading...</div>,
+}));
+
+vi.mock('../components/Details.tsx', () => ({
+  Details: ({ name }: any) => (
+    <div data-testid="details">Details of {name}</div>
+  ),
+}));
+
+describe('SearchPage', () => {
+  const useGetAllPokemonQueryMock = vi.spyOn(apiSlice, 'useGetAllPokemonQuery');
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders and displays header and main', () => {
+  it('renders loading spinner when loading', () => {
+    useGetAllPokemonQueryMock.mockReturnValue({
+      data: null,
+      isLoading: true,
+      isError: false,
+      error: null,
+      refetch: () => {
+        return {} as any;
+      },
+    });
+
     render(<SearchPage />);
-    expect(screen.getByTestId('header')).toBeInTheDocument();
-    expect(screen.getByTestId('main')).toBeInTheDocument();
-    expect(screen.getByText('Item 1')).toBeInTheDocument();
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
-  it('handles item click', () => {
+  it('renders error message when error occurs', () => {
+    useGetAllPokemonQueryMock.mockReturnValue({
+      data: null,
+      isLoading: false,
+      isError: true,
+      error: { status: 500 },
+      refetch: () => {
+        return {} as any;
+      },
+    });
+
     render(<SearchPage />);
-    fireEvent.click(screen.getByText('Item 1'));
-    expect(mockSetSearchParams).toHaveBeenCalled();
+
+    expect(screen.getByText(/Error:/)).toBeInTheDocument();
+  });
+
+  it('renders list of pokemon and allows search and pagination', async () => {
+    useGetAllPokemonQueryMock.mockReturnValue({
+      data: {
+        results: [
+          { name: 'bulbasaur' },
+          { name: 'ivysaur' },
+          { name: 'venusaur' },
+          { name: 'charmander' },
+          { name: 'pikachu' },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: () => {
+        return {} as any;
+      },
+    });
+
+    render(<SearchPage />);
+
+    expect(screen.getByTestId('main-list').children.length).toBe(5);
+
+    fireEvent.click(screen.getByText('Search Pikachu'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('main-list').children.length).toBe(1);
+      expect(screen.getByText('pikachu')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText('Next Page'));
+  });
+
+  it('opens details when an item is clicked', async () => {
+    useGetAllPokemonQueryMock.mockReturnValue({
+      data: {
+        results: [{ name: 'bulbasaur' }],
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: () => {
+        return {} as any;
+      },
+    });
+
+    render(<SearchPage />);
+
+    expect(screen.queryByTestId('details')).toBeNull();
+
+    await waitFor(() =>
+      expect(screen.getByText('bulbasaur')).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByText('bulbasaur'));
   });
 });

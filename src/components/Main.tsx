@@ -1,15 +1,14 @@
 import CardList from './CardList.tsx';
 
-type CardListItem = {
+export type CardListItem = {
   name: string;
-  description: string;
   url: string;
 };
 
 type Props = {
   items: CardListItem[];
   loading: boolean;
-  error: string | null;
+  error: string | null | undefined;
   onItemClick: (name: string) => void;
 };
 

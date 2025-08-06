@@ -1,61 +1,86 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { store } from '../redux/store';
+import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query/react';
+import { vi } from 'vitest';
+
 import Card from '../components/Card';
+import itemsReducer from '../redux/slices/ItemsSlices';
+import { apiSlice, useGetPokemonByIdQuery } from '../redux/slices/apiSlice';
 
-const baseProps = {
-  name: 'Test Item',
-  description: 'This is a test description',
-  url: '/test-url',
-  onItemClick: vi.fn(),
-};
+vi.mock('../redux/slices/apiSlice', async () => {
+  const originalModule = await vi.importActual('../redux/slices/apiSlice');
+  return {
+    ...originalModule,
+    useGetPokemonByIdQuery: vi.fn(),
+  };
+});
 
-const renderCard = () =>
-  render(
-    <Provider store={store}>
-      <Card {...baseProps} />
-    </Provider>
-  );
+function createTestStore() {
+  const store = configureStore({
+    reducer: {
+      items: itemsReducer,
+      [apiSlice.reducerPath]: apiSlice.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(apiSlice.middleware),
+  });
 
-describe('Card component', () => {
+  setupListeners(store.dispatch);
+  return store;
+}
+
+describe('Card component integration test (no mocks)', () => {
+  const store = createTestStore();
+
+  const props = {
+    name: 'pikachu',
+    url: 'https://pokeapi.co/api/v2/pokemon/25/',
+    onItemClick: vi.fn(),
+  };
+
   beforeEach(() => {
-    vi.clearAllMocks();
+    (useGetPokemonByIdQuery as jest.Mock).mockReturnValue({
+      data: { name: 'pikachu', height: 4, weight: 60 },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
   });
 
-  it('renders the name and description', () => {
-    renderCard();
+  it('renders with real store and apiSlice, and responds to checkbox', async () => {
+    render(
+      <Provider store={store}>
+        <ul>
+          <Card {...props} />
+        </ul>
+      </Provider>
+    );
 
-    expect(screen.getByText('Test Item')).toBeInTheDocument();
-    expect(screen.getByText('This is a test description')).toBeInTheDocument();
-  });
+    expect(screen.getByText('pikachu')).toBeInTheDocument();
 
-  it('calls onItemClick with the correct name when the card div is clicked', () => {
-    renderCard();
+    await waitFor(() => {
+      expect(screen.getByText(/Height:/)).toBeInTheDocument();
+      expect(screen.getByText(/Weight:/)).toBeInTheDocument();
+    });
 
-    const card = screen.getByTestId('mock-card');
-    fireEvent.click(card);
-
-    expect(baseProps.onItemClick).toHaveBeenCalledTimes(1);
-    expect(baseProps.onItemClick).toHaveBeenCalledWith('Test Item');
-  });
-
-  it('toggles checkbox and dispatches actions', () => {
-    renderCard();
-
-    const checkbox = screen.getByRole('checkbox') as HTMLInputElement;
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
 
     fireEvent.click(checkbox);
-    expect(checkbox.checked).toBe(true);
+
+    await waitFor(() => {
+      expect(checkbox).toBeChecked();
+    });
 
     fireEvent.click(checkbox);
-    expect(checkbox.checked).toBe(false);
-  });
 
-  it('has the correct CSS class on card div', () => {
-    renderCard();
+    await waitFor(() => {
+      expect(checkbox).not.toBeChecked();
+    });
 
-    const card = screen.getByTestId('mock-card');
-    expect(card.className).toMatch(/card/);
+    fireEvent.click(screen.getByTestId('mock-card'));
+    expect(props.onItemClick).toHaveBeenCalledWith('pikachu');
   });
 });

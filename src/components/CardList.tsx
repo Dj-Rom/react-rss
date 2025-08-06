@@ -5,13 +5,13 @@ import type { RootState } from '../redux/store';
 import Flyout from '../components/Flyout.tsx';
 
 export type CardListProps = {
-  items: Array<{ name: string; description: string; url: string }>;
+  items: Array<{ name: string; url: string }>;
   onItemClick: (name: string) => void;
 };
 
 const CardList = ({ items, onItemClick }: CardListProps) => {
   const selectedItems = useSelector(
-    (state: RootState) => state.itemsReducer.selectedItems
+    (state: RootState) => state.items.selectedItems
   );
 
   return (
@@ -22,7 +22,6 @@ const CardList = ({ items, onItemClick }: CardListProps) => {
         <Card
           key={item.name}
           name={item.name}
-          description={item.description}
           url={item.url}
           onItemClick={onItemClick}
         />

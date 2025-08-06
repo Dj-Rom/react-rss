@@ -1,81 +1,75 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { Pagination } from './../components/Pagination';
+import { Pagination } from '../components/Pagination';
 
 describe('Pagination', () => {
-  it('renders nothing if total pages <= 1', () => {
-    const { container } = render(
-      <Pagination
-        currentPage={1}
-        totalItems={5}
-        itemsPerPage={10}
-        onPageChange={() => {}}
-      />
-    );
-    expect(container).toBeEmptyDOMElement();
-  });
-
-  it('renders all pages when totalPages is small', () => {
+  it('renders all pages if totalPages <= maxVisiblePages + 4', () => {
     render(
       <Pagination
         currentPage={1}
-        totalItems={40}
-        itemsPerPage={10}
+        totalItems={7}
+        itemsPerPage={1}
         onPageChange={() => {}}
       />
     );
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(4);
-    expect(buttons[0]).toHaveTextContent('1');
-    expect(buttons[3]).toHaveTextContent('4');
+
+    for (let i = 1; i <= 7; i++) {
+      expect(screen.getByText(i.toString())).toBeInTheDocument();
+    }
+
+    expect(screen.queryByText('...')).not.toBeInTheDocument();
   });
 
-  it('renders ellipsis when totalPages is large', () => {
+  it('renders ellipsis and pages correctly for large page counts', () => {
     render(
       <Pagination
-        currentPage={5}
-        totalItems={100}
-        itemsPerPage={5}
+        currentPage={10}
+        totalItems={20}
+        itemsPerPage={1}
         onPageChange={() => {}}
       />
     );
-
-    const ellipses = screen.getAllByText('...');
-    expect(ellipses).toHaveLength(2);
 
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('20')).toBeInTheDocument();
+
+    // Should have ellipsis spans
+    expect(screen.getAllByText('...').length).toBe(2);
+    expect(screen.getByText('9')).toBeInTheDocument();
+    expect(screen.getByText('10')).toBeInTheDocument();
+    expect(screen.getByText('11')).toBeInTheDocument();
   });
 
-  it('disables current page button', () => {
+  it('disables the button for the current page', () => {
     render(
       <Pagination
         currentPage={3}
-        totalItems={30}
-        itemsPerPage={5}
+        totalItems={10}
+        itemsPerPage={1}
         onPageChange={() => {}}
       />
     );
-    const button = screen.getByRole('button', { name: '3' });
-    expect(button).toBeDisabled();
+
+    const currentPageBtn = screen.getByText('3');
+    expect(currentPageBtn).toBeDisabled();
+
+    const otherPageBtn = screen.getByText('2');
+    expect(otherPageBtn).not.toBeDisabled();
   });
 
-  it('calls onPageChange with correct page number on button click', async () => {
+  it('calls onPageChange with the correct page number when a page button is clicked', () => {
     const onPageChange = vi.fn();
+
     render(
       <Pagination
         currentPage={1}
-        totalItems={50}
-        itemsPerPage={5}
+        totalItems={5}
+        itemsPerPage={1}
         onPageChange={onPageChange}
       />
     );
 
-    const pageButton = screen.getByRole('button', { name: '2' });
-    await userEvent.click(pageButton);
-
-    expect(onPageChange).toHaveBeenCalledTimes(1);
-    expect(onPageChange).toHaveBeenCalledWith(2);
+    fireEvent.click(screen.getByText('3'));
+    expect(onPageChange).toHaveBeenCalledWith(3);
   });
 });

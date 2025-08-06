@@ -6,6 +6,8 @@ const About = () => {
       <section data-testid="about-page">
         <h1>Hi, my name is Aleh</h1>
         <span>I`&lsquo;m originally from Belarus, but now live in Poland</span>
+        <span>My Skills:</span>
+        <p>JS,TS,PHP,HTML,CSS,SCSS,React,Redux,</p>
         <br />
         <a
           href="https://rs.school/courses/reactjs"

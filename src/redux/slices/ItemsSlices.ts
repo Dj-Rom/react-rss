@@ -1,14 +1,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export interface Item {
+export interface ItemSlice {
   id: string;
   name: string;
-  description: string;
   detailsUrl: string;
 }
 
 interface ItemsState {
-  selectedItems: Item[];
+  selectedItems: ItemSlice[];
 }
 
 const initialState: ItemsState = {
@@ -19,7 +18,7 @@ const itemsSlice = createSlice({
   name: 'itemsSlice',
   initialState,
   reducers: {
-    addItem(state, action: PayloadAction<Item>) {
+    addItem(state, action: PayloadAction<ItemSlice>) {
       const exists = state.selectedItems.some(
         (item) => item.id === action.payload.id
       );

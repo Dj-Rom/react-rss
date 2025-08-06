@@ -104,18 +104,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,14 +133,15 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';
 import Flyout from '../components/Flyout.tsx';
 &nbsp;
+&nbsp;
 export type CardListProps = {
-  items: Array&lt;{ name: string; description: string; url: string }&gt;;
+  items: Array&lt;{ name: string; url: string }&gt;;
   onItemClick: (name: string) =&gt; void;
 };
 &nbsp;
 const CardList = ({ items, onItemClick }: CardListProps) =&gt; {
   const selectedItems = useSelector(
-    (state: RootState) =&gt; state.itemsReducer.selectedItems
+    (state: RootState) =&gt; state.items.selectedItems
   );
 &nbsp;
   return (
@@ -151,7 +152,6 @@ const CardList = ({ items, onItemClick }: CardListProps) =&gt; {
         &lt;Card
           key={item.name}
           name={item.name}
-          description={item.description}
           url={item.url}
           onItemClick={onItemClick}
         /&gt;
@@ -175,7 +175,7 @@ export default CardList;
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-08-02T15:54:50.113Z
+      at 2025-08-06T14:46:24.956Z
     </div>
     <script src="../../prettify.js"></script>
     <script>
