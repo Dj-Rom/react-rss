@@ -1,40 +1,46 @@
-import React, { Component, type ReactNode } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { clearError } from './redux/slices/errorSlice.tsx';
 
 type Props = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
-type State = {
-  hasError: boolean;
-};
+export function ErrorBoundaryWrapper({ children }: Props) {
+  const dispatch = useDispatch();
 
-class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false };
+  class InnerErrorBoundary extends React.Component<
+    Props,
+    { hasError: boolean }
+  > {
+    state = { hasError: false };
 
-  static getDerivedStateFromError(): State {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Caught by ErrorBoundary:', error, errorInfo);
-  }
-
-  handleReset = () => {
-    this.setState({ hasError: false });
-  };
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div>
-          <h1>Something went wrong.</h1>
-          <button onClick={this.handleReset}>Try again</button>
-        </div>
-      );
+    static getDerivedStateFromError(): { hasError: boolean } {
+      return { hasError: true };
     }
 
-    return this.props.children;
-  }
-}
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+      console.error('Caught by ErrorBoundary:', error, errorInfo);
+    }
 
-export default ErrorBoundary;
+    handleReset = () => {
+      dispatch(clearError());
+      this.setState({ hasError: false });
+    };
+
+    render() {
+      if (this.state.hasError) {
+        return (
+          <div>
+            <h1>Something went wrong.</h1>
+            <button onClick={this.handleReset}>Try again</button>
+          </div>
+        );
+      }
+
+      return this.props.children;
+    }
+  }
+
+  return <InnerErrorBoundary>{children}</InnerErrorBoundary>;
+}

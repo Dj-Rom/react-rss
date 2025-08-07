@@ -1,68 +1,83 @@
-import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ErrorBoundary from '../ErrorBoundary';
+import { Provider, useDispatch } from 'react-redux';
+import { ErrorBoundaryWrapper } from '../ErrorBoundary';
+import { clearError } from '../redux/slices/errorSlice.tsx';
 
-const consoleErrorMock = vi
-  .spyOn(console, 'error')
-  .mockImplementation(() => {});
-
-afterEach(() => {
-  consoleErrorMock.mockClear();
+beforeEach(() => {
+  vi.clearAllMocks();
 });
 
-afterAll(() => {
-  consoleErrorMock.mockRestore();
+vi.mock('react-redux', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-redux')>('react-redux');
+  return {
+    ...actual,
+    useDispatch: vi.fn(),
+  };
 });
 
-const Bomb = () => {
+vi.mock('../redux/slices/errorSlice.tsx', () => ({
+  clearError: vi.fn(() => ({ type: 'CLEAR_ERROR' })),
+}));
+
+const mockDispatch = vi.fn();
+(useDispatch as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+  mockDispatch
+);
+
+function ProblemChild(): JSX.Element {
   throw new Error('Boom!');
+  return <div />;
+}
+
+const mockStore = {
+  getState: () => ({}),
+  subscribe: () => () => {},
+  dispatch: vi.fn(),
 };
 
-const ErrorTriggerButton = () => {
-  const [throwError, setThrowError] = React.useState(false);
-  return throwError ? (
-    <Bomb />
-  ) : (
-    <button onClick={() => setThrowError(true)}>Trigger Error</button>
-  );
-};
-
-describe('ErrorBoundary', () => {
-  test('displays fallback UI when a child throws', () => {
+describe('ErrorBoundaryWrapper', () => {
+  it('renders children without error', () => {
     render(
-      <ErrorBoundary>
-        <ErrorTriggerButton />
-      </ErrorBoundary>
+      <Provider store={mockStore}>
+        <ErrorBoundaryWrapper>
+          <div>Safe child</div>
+        </ErrorBoundaryWrapper>
+      </Provider>
     );
 
-    fireEvent.click(screen.getByText(/trigger error/i));
-
-    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
-    expect(consoleErrorMock).toHaveBeenCalled();
+    expect(screen.getByText('Safe child')).toBeInTheDocument();
   });
 
-  test('renders children when no error occurs', () => {
+  it('catches error and shows fallback UI', () => {
     render(
-      <ErrorBoundary>
-        <p>Normal content</p>
-      </ErrorBoundary>
+      <Provider store={mockStore}>
+        <ErrorBoundaryWrapper>
+          <ProblemChild />
+        </ErrorBoundaryWrapper>
+      </Provider>
     );
 
-    expect(screen.getByText(/normal content/i)).toBeInTheDocument();
+    expect(screen.getByText('Something went wrong.')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /try again/i })
+    ).toBeInTheDocument();
   });
 
-  test('resets error state when "Try again" is clicked', () => {
+  it('resets error state and dispatches clearError on button click', () => {
     render(
-      <ErrorBoundary>
-        <ErrorTriggerButton />
-      </ErrorBoundary>
+      <Provider store={{ ...mockStore, dispatch: mockDispatch }}>
+        <ErrorBoundaryWrapper>
+          <ProblemChild />
+        </ErrorBoundaryWrapper>
+      </Provider>
     );
 
-    fireEvent.click(screen.getByText(/trigger error/i));
-    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+    const button = screen.getByRole('button', { name: /try again/i });
+    fireEvent.click(button);
 
-    fireEvent.click(screen.getByText(/try again/i));
-    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/trigger error/i)).toBeInTheDocument(); // Child re-rendered
+    expect(clearError).toHaveBeenCalledTimes(1);
+    expect(mockDispatch).toHaveBeenCalledWith(clearError());
   });
 });

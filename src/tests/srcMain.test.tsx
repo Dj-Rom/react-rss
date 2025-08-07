@@ -17,6 +17,7 @@ describe('index.tsx render test', () => {
     expect(renderMock).toHaveBeenCalledTimes(1);
 
     const reactTree = renderMock.mock.calls[0][0];
-    expect(reactTree.props.children.type.name).toBe('ErrorBoundary');
+    const errorBoundaryWrapper = reactTree.props.children;
+    expect(errorBoundaryWrapper.type.name).toBe('Provider');
   });
 });

@@ -9,6 +9,7 @@ import type { RootState } from '../redux/store';
 import styles from './../css/main.module.css';
 import { useGetPokemonByIdQuery } from '../redux/slices/apiSlice.tsx';
 import Spinner from './Spinner.tsx';
+import { setError } from '../redux/slices/errorSlice.tsx';
 
 export type CartProps = {
   name: string;
@@ -24,6 +25,17 @@ const Card = ({ name, url, onItemClick }: CartProps) => {
 
   const id = Number(url.split('/').filter(Boolean).pop());
   const { data, isLoading, isError, error } = useGetPokemonByIdQuery(id);
+  if (isError) {
+    dispatch(
+      setError({
+        isError: true,
+        message:
+          typeof error === 'object' && error !== null && 'message' in error
+            ? String(error.message)
+            : 'An unknown error occurred',
+      })
+    );
+  }
   const cardId = `${name}`;
   const handleCheck = (item: ItemSlice) => {
     dispatch(addItem(item));

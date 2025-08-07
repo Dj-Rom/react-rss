@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import ErrorBoundary from './ErrorBoundary.tsx';
+import { ErrorBoundaryWrapper } from './ErrorBoundary.tsx';
 
 import './index.css';
 import App from './App.tsx';
@@ -12,12 +12,12 @@ const root = createRoot(container);
 
 root.render(
   <StrictMode>
-    <ErrorBoundary>
-      <Provider store={store}>
+    <Provider store={store}>
+      <ErrorBoundaryWrapper>
         <ThemeProvider>
           <App />
         </ThemeProvider>
-      </Provider>
-    </ErrorBoundary>
+      </ErrorBoundaryWrapper>
+    </Provider>
   </StrictMode>
 );
