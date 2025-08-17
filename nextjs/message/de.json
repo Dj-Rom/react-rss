@@ -1,0 +1,17 @@
+{
+  "header": {
+    "title": "über uns",
+    "searchPlaceholder": "Pokémon suchen..."
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler: {error}",
+    "page": "Seite",
+    "close" : "schließen"
+  },
+  "about": {
+    "a" : "Hallo, mein Name ist Aleh",
+    "b" : "Ich komme ursprünglich aus Weißrussland, lebe aber jetzt in Polen. Meine Fähigkeiten",
+    "c" :"Zur Startseite"
+  }
+}

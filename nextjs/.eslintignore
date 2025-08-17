@@ -1,0 +1,43 @@
+# Ignore Next.js build output
+.next/
+out/
+
+# Ignore node modules
+node_modules/
+
+# Ignore environment files
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore lockfiles if needed
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore test coverage
+coverage/
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore Husky hooks if not linting them
+.husky/
+
+# Ignore generated types or mocks
+**/__generated__/
+**/__mocks__/
+
+# Ignore public assets
+public/
+
+# Ignore build artifacts from other tools
+dist/
+build/
