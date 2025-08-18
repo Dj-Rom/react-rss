@@ -27,9 +27,7 @@ const t = useTranslations('header')
     <header className={styles.header}>
       <div className={styles.header_left}>
         {' '}
-        <Link href={'/about'} className={styles.about_link}>
-          {t('title')}
-        </Link>
+
         <ThemeToggle />
       </div>
       <LanguageSwitcher/>
