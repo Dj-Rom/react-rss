@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cbe66727-95c5-47e9-872a-81cea905478f" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="app-state-management" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/nextjs" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Dj-Rom&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:Dj-Rom/react-rss.git&quot;,
+    &quot;accountId&quot;: &quot;5a4f51a1-edbe-4da6-8afc-9837263b8cd8&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2zmEdTRfjgXRkfuhFbBzUuCMgfh" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Vitest.App fetchItems method.sets hasError state and error message on API failure.executor&quot;: &quot;Run&quot;,
+    &quot;Vitest.App fetchItems method.sets hasError state and throws on API failure.executor&quot;: &quot;Run&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kapus/WebstormProjects/react-rss&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Sass&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kapus\\WebstormProjects\\react-rss\\nextjs\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kapus\WebstormProjects\react-rss\nextjs" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kapus\WebstormProjects\react-rss\nextjs\src" />
+      <recent name="C:\Users\kapus\WebstormProjects\react-rss\nextjs" />
+      <recent name="C:\Users\kapus\WebstormProjects\react-rss\nextjs\src\redux" />
+      <recent name="C:\Users\kapus\WebstormProjects\react-rss\nextjs\src\app" />
+      <recent name="C:\Users\kapus\WebstormProjects\react-rss\nextjs\src\app\[locale]" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="App fetchItems method.sets hasError state and error message on API failure" type="JavaScriptTestRunnerVitest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <vitest-package value="$PROJECT_DIR$/node_modules/vitest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <vitest-options value="--run" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/tests/Fetch.test.tsx" />
+      <test-names>
+        <test-name value="App fetchItems method" />
+        <test-name value="sets hasError state and error message on API failure" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="App fetchItems method.sets hasError state and throws on API failure" type="JavaScriptTestRunnerVitest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <vitest-package value="$PROJECT_DIR$/node_modules/vitest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <vitest-options value="--run" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/tests/Fetch.test.tsx" />
+      <test-names>
+        <test-name value="App fetchItems method" />
+        <test-name value="sets hasError state and throws on API failure" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Vitest.App fetchItems method.sets hasError state and throws on API failure" />
+        <item itemvalue="Vitest.App fetchItems method.sets hasError state and error message on API failure" />
+        <item itemvalue="Vitest.App fetchItems method.sets hasError state and throws on API failure" />
+        <item itemvalue="Vitest.App fetchItems method.sets hasError state and error message on API failure" />
+        <item itemvalue="Vitest.App fetchItems method.sets hasError state and throws on API failure" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.27812.50" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cbe66727-95c5-47e9-872a-81cea905478f" name="Changes" comment="" />
+      <created>1752327935913</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1752327935913</updated>
+      <workItem from="1752327936998" duration="4477000" />
+      <workItem from="1752411667662" duration="108000" />
+      <workItem from="1752505129041" duration="5384000" />
+      <workItem from="1752578524399" duration="7159000" />
+      <workItem from="1752587910169" duration="20000" />
+      <workItem from="1752587931544" duration="1263000" />
+      <workItem from="1752656533854" duration="54000" />
+      <workItem from="1752777569827" duration="699000" />
+      <workItem from="1752778284163" duration="10154000" />
+      <workItem from="1752788895316" duration="629000" />
+      <workItem from="1752849456493" duration="22000" />
+      <workItem from="1752953712802" duration="834000" />
+      <workItem from="1753254128787" duration="3005000" />
+      <workItem from="1753357507144" duration="13947000" />
+      <workItem from="1753395093500" duration="1775000" />
+      <workItem from="1753432830598" duration="11401000" />
+      <workItem from="1753603088561" duration="707000" />
+      <workItem from="1753699685262" duration="2629000" />
+      <workItem from="1753706822995" duration="13000" />
+      <workItem from="1753782727193" duration="7259000" />
+      <workItem from="1753791088916" duration="6567000" />
+      <workItem from="1754137414898" duration="8723000" />
+      <workItem from="1754168368669" duration="4000" />
+      <workItem from="1754474011996" duration="12596000" />
+      <workItem from="1754488507208" duration="5799000" />
+      <workItem from="1754585916651" duration="2658000" />
+      <workItem from="1754588630387" duration="1850000" />
+      <workItem from="1754592080157" duration="8000" />
+      <workItem from="1754937384030" duration="1217000" />
+      <workItem from="1755024085434" duration="2486000" />
+      <workItem from="1755026612199" duration="7885000" />
+      <workItem from="1755204299881" duration="36883000" />
+      <workItem from="1755452967541" duration="10177000" />
+      <workItem from="1755463580871" duration="1820000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/nextjs/src/app/[locale]/page.tsx</url>
+          <line>49</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/nextjs/src/components/Details.tsx</url>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/nextjs/src/app/[locale]/page.tsx</url>
+          <line>37</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/nextjs/src/components/Header.tsx</url>
+          <line>33</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/nextjs/src/app/[locale]/page.tsx</url>
+          <line>41</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

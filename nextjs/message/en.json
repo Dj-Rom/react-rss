@@ -1,0 +1,17 @@
+{
+  "header": {
+    "title": "About us",
+    "searchPlaceholder": "Search Pokémon..."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error: {error}",
+    "page": "Page",
+    "close" : "close"
+  },
+  "about": {
+    "a" : "Hi, my name is Aleh",
+    "b" : "I`‘m originally from Belarus, but now live in PolandMy Skills",
+    "c" :"Go to home page"
+  }
+}
