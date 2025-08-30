@@ -25,7 +25,7 @@ const ColumnModal: React.FC<Props> = ({
     );
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+    <div className="colums">
       <div className="bg-white p-4 rounded w-80 max-h-[80vh] overflow-y-auto">
         <h2 className="font-bold mb-2">Select Columns</h2>
         <ul className="space-y-1">

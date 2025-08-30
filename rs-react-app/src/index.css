@@ -42,7 +42,24 @@ body {
   align-items: center;
   margin-bottom: 12px;
 }
-
+.colums {
+  max-height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  background: black;
+  width: 100%;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+    li {
+      width: 30%;
+    }
+  }
+}
 .card {
   background: var(--panel);
   border-radius: 14px;

@@ -10,7 +10,7 @@ export type SortDir = 'asc' | 'desc';
 export default function App() {
   const data: Co2Dataset = co2DataResource.read();
 
-  const [year, setYear] = useState<number>(2019);
+  const [year, setYear] = useState<number>(new Date().getFullYear());
   const [region, setRegion] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const [sortKey, setSortKey] = useState<SortKey>('name');
