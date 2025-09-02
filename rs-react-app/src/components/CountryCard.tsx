@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-
+import isoCodes from '../iso-codes.json';
 interface Props {
   name: string;
   country: any;
@@ -31,6 +31,7 @@ const CountryCard: React.FC<Props> = ({ name, country, year, columns }) => {
                 {col}
               </th>
             ))}
+            <th>ISO CODE</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +41,11 @@ const CountryCard: React.FC<Props> = ({ name, country, year, columns }) => {
                 {row[col] ?? 'N/A'}
               </td>
             ))}
+            <td>
+              {isoCodes.find(
+                (n) => n.country.toLowerCase() === name.toString().toLowerCase()
+              )?.iso_code || 'N/A'}
+            </td>
           </tr>
         </tbody>
       </table>
