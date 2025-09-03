@@ -1,0 +1,186 @@
+:root {
+  --bg: #0b1020;
+  --panel: #121a33;
+  --muted: #8ea3b0;
+  --text: #e6eef2;
+  --accent: #5dd0ff;
+}
+
+* {
+  box-sizing: border-box;
+  text-align: center;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    14px/1.4 system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.colums {
+  max-height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  background: black;
+  width: 100%;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+    li {
+      width: 30%;
+    }
+  }
+}
+.card {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+input,
+select,
+button {
+  background: #0d1530;
+  color: var(--text);
+  border: 1px solid #26335a;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button.primary {
+  background: linear-gradient(180deg, #12385b, #0e2740);
+  border-color: #29507d;
+}
+
+.table-auto {
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 12px;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #22325a;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #0b2340;
+  border: 1px solid #1e3a70;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.tableDiv {
+  border: 2px solid white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flash {
+  animation: flash 1s ease-in-out;
+}
+
+@keyframes flash {
+  0% {
+    background: #1f2a4d;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--panel);
+  padding: 16px;
+  border-radius: 14px;
+  max-width: 640px;
+  width: 96%;
+}
+
+.modal-grid {
+  max-height: 50vh;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+th {
+  background: #1e3a70;
+}
+td {
+  border: 1px solid var(--accent);
+}
